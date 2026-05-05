@@ -200,4 +200,3 @@ Para dúvidas ou reportar bugs, abra uma issue no repositório.
 
 ---
 
-**Desenvolvido com ❤️ usando React**
