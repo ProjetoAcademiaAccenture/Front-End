@@ -1,0 +1,54 @@
+.transacoes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.transacoes-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.stat-box h3 {
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.stat-box .valor {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 10px 0;
+  color: #003087;
+}
+
+.stat-box .valor.credito {
+  color: #1a7a45;
+}
+
+.stat-box .valor.debito {
+  color: #c0392b;
+}
+
+.stat-box .quantidade {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .transacoes-stats {
+    grid-template-columns: 1fr;
+  }
+}

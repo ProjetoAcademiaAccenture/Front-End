@@ -1,0 +1,40 @@
+.loja-header {
+  background: #1a5c38;
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.loja-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.loja-user {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.carrinho-badge {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .loja-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .carrinho-badge {
+    align-self: flex-start;
+  }
+}

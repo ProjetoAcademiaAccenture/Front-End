@@ -1,0 +1,70 @@
+.extrato-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.extrato-container h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #003087;
+}
+
+.extrato-empty {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+  font-size: 14px;
+}
+
+.extrato-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.extrato-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.extrato-row:last-child {
+  border-bottom: none;
+}
+
+.extrato-info {
+  flex: 1;
+}
+
+.extrato-desc {
+  color: #222;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.extrato-date {
+  color: #999;
+  font-size: 12px;
+}
+
+.extrato-valor {
+  font-weight: 600;
+  text-align: right;
+  min-width: 150px;
+}
+
+.extrato-valor.credito {
+  color: #1a7a45;
+}
+
+.extrato-valor.debito {
+  color: #c0392b;
+}
+
+.extrato-valor.reserved {
+  color: #ff9500;
+}

@@ -1,0 +1,115 @@
+.pedidos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pedido-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+  transition: all 0.2s ease;
+}
+
+.pedido-card:hover {
+  box-shadow: 0 4px 12px rgba(26, 92, 56, 0.1);
+}
+
+.pedido-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pedido-header h3 {
+  margin: 0 0 4px 0;
+  color: #1a5c38;
+  font-size: 16px;
+}
+
+.pedido-data {
+  margin: 0;
+  color: #999;
+  font-size: 12px;
+}
+
+.badge-paid {
+  background: #d4edda;
+  color: #1a7a45;
+}
+
+.badge-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.pedido-items {
+  margin-bottom: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.pedido-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #555;
+  padding: 8px 0;
+}
+
+.pedido-totals {
+  background: #f9fdf8;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.total-line.desconto {
+  color: #1a7a45;
+  font-weight: 600;
+}
+
+.total-line.total {
+  font-weight: 700;
+  color: #1a5c38;
+  font-size: 14px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pedido-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-detalhes,
+.btn-rastrear {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #1a5c38;
+  background: transparent;
+  color: #1a5c38;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-detalhes:hover,
+.btn-rastrear:hover {
+  background: #1a5c38;
+  color: white;
+}

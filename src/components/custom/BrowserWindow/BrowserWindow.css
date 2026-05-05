@@ -1,0 +1,240 @@
+.desktop {
+  background: #1a2744;
+  border-radius: 12px;
+  padding: 14px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.pc-window {
+  background: #f0f2f5;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1.5px solid #ccc;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 1200px;
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Titlebar */
+.titlebar {
+  background: #e2e2e2;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid #ccc;
+  height: 28px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot.red {
+  background: #ff5f57;
+}
+
+.dot.yellow {
+  background: #febc2e;
+}
+
+.dot.green {
+  background: #28c840;
+}
+
+.titlebar-text {
+  font-size: 11px;
+  color: #555;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+/* Tab Bar */
+.tab-bar {
+  background: #d4d6db;
+  display: flex;
+  gap: 2px;
+  padding: 4px 8px 0;
+  border-bottom: 1px solid #bbb;
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  background: #c4c6cb;
+  color: #555;
+  font-weight: 500;
+  user-select: none;
+}
+
+.tab:hover {
+  background: #d0d2d7;
+}
+
+.tab.active {
+  background: #fff;
+  border-color: #bbb;
+  color: #222;
+  font-weight: 600;
+}
+
+.tab-favicon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.tab-favicon.loja {
+  background: #1a5c38;
+}
+
+.tab-favicon.banco {
+  background: #003087;
+}
+
+/* Address Bar */
+.address-bar {
+  background: #fff;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid #ddd;
+  height: 32px;
+}
+
+.address-icon {
+  font-size: 12px;
+  color: #666;
+}
+
+.address-input {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #444;
+  flex: 1;
+  font-family: 'Courier New', monospace;
+}
+
+/* Browser Content */
+.browser-content {
+  flex: 1;
+  background: #fff;
+  overflow-y: auto;
+  position: relative;
+}
+
+.screen {
+  display: none;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.screen.visible {
+  display: block;
+}
+
+/* Module Layout */
+.module-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.module-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+}
+
+/* Scrollbar Styling */
+.screen::-webkit-scrollbar,
+.module-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.screen::-webkit-scrollbar-track,
+.module-content::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.screen::-webkit-scrollbar-thumb,
+.module-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.screen::-webkit-scrollbar-thumb:hover,
+.module-content::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .desktop {
+    padding: 10px;
+  }
+
+  .pc-window {
+    height: calc(100vh - 20px);
+  }
+
+  .tab {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop {
+    padding: 0;
+  }
+
+  .pc-window {
+    height: 100vh;
+    border-radius: 0;
+    border: none;
+    max-width: 100%;
+  }
+
+  .tab {
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .tab-favicon {
+    width: 12px;
+    height: 12px;
+  }
+
+  .module-content {
+    padding: 12px;
+  }
+}

@@ -1,0 +1,18 @@
+.banco-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f6f8;
+}
+
+.banco-content {
+  flex: 1;
+  background: #f5f6f8;
+  page-transition: fadeIn 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .banco-layout {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,143 @@
+.carrinho-container {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+}
+
+.carrinho-items {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+}
+
+.carrinho-vazio {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 16px;
+}
+
+.carrinho-vazio p {
+  margin-bottom: 20px;
+}
+
+.btn-continuar-comprando {
+  padding: 10px 20px;
+  background: #1a5c38;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-continuar-comprando:hover {
+  background: #0f3d25;
+}
+
+.carrinho-resumo {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.carrinho-resumo h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #1a5c38;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-item.desconto {
+  color: #1a7a45;
+  font-weight: 600;
+}
+
+.resumo-item.frete {
+  color: #1a7a45;
+  font-weight: 600;
+}
+
+.info-desconto {
+  background: #f0f8f5;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #1a7a45;
+  margin-bottom: 10px;
+}
+
+.divisor {
+  height: 2px;
+  background: #f0f0f0;
+  margin: 12px 0;
+}
+
+.resumo-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a5c38;
+  margin-bottom: 16px;
+}
+
+.btn-finalizar {
+  width: 100%;
+  padding: 12px;
+  background: #1a5c38;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
+}
+
+.btn-finalizar:hover {
+  background: #0f3d25;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 92, 56, 0.2);
+}
+
+.btn-continuar {
+  width: 100%;
+  padding: 10px;
+  background: #f0f8f5;
+  color: #1a5c38;
+  border: 1px solid #1a5c38;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-continuar:hover {
+  background: #1a5c38;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .carrinho-container {
+    grid-template-columns: 1fr;
+  }
+
+  .carrinho-resumo {
+    position: static;
+  }
+}

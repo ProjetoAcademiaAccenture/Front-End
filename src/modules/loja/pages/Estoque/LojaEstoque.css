@@ -1,0 +1,205 @@
+.estoque-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.stat-card .valor {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a5c38;
+  margin: 0;
+}
+
+.stat-card.alerta .valor {
+  color: #ff9500;
+}
+
+.stat-card.critico .valor {
+  color: #ff5252;
+}
+
+.estoque-table {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8f9fa;
+}
+
+th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background: #f9fdf8;
+}
+
+tbody tr.status-fora {
+  opacity: 0.6;
+}
+
+.sku {
+  font-family: monospace;
+  color: #999;
+  font-size: 12px;
+}
+
+.estoque-cell {
+  font-weight: 600;
+  color: #1a5c38;
+}
+
+.input-estoque {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.estoque-valor {
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #f0f8f5;
+}
+
+.status-ok {
+  background: #d4edda;
+  color: #1a7a45;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-baixo {
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-fora {
+  background: #f8d7da;
+  color: #842029;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.acao-cell {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-editar,
+.btn-salvar,
+.btn-cancelar {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-editar {
+  background: #f0f8f5;
+  color: #1a5c38;
+  border: 1px solid #1a5c38;
+}
+
+.btn-editar:hover {
+  background: #1a5c38;
+  color: white;
+}
+
+.btn-salvar {
+  background: #d4edda;
+  color: #1a7a45;
+  border: 1px solid #1a7a45;
+}
+
+.btn-salvar:hover {
+  background: #1a7a45;
+  color: white;
+}
+
+.btn-cancelar {
+  background: #f8d7da;
+  color: #842029;
+  border: 1px solid #842029;
+}
+
+.btn-cancelar:hover {
+  background: #842029;
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .estoque-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 10px 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .estoque-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .estoque-table {
+    overflow-x: auto;
+  }
+}

@@ -1,0 +1,140 @@
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.perfil-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  border: 1px solid #eee;
+}
+
+.perfil-card h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #003087;
+}
+
+.perfil-card.danger {
+  border-color: #ffcccc;
+  background: #fffafb;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.info-row:last-of-type {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.info-value {
+  color: #333;
+  font-weight: 500;
+}
+
+.btn-action {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background: #f0f7ff;
+  color: #003087;
+  border: 1px solid #003087;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn-action:hover {
+  background: #003087;
+  color: white;
+}
+
+.divider {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  cursor: pointer;
+  gap: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.checkbox-item input {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.btn-logout {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #ff9500;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 10px 0;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn-logout:hover {
+  background: #e68600;
+}
+
+.btn-delete {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #ff5252;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 10px 0;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn-delete:hover {
+  background: #ff1744;
+}
+
+.warning-text {
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ffcccc;
+}
+
+@media (max-width: 768px) {
+  .perfil-card {
+    padding: 20px;
+  }
+}

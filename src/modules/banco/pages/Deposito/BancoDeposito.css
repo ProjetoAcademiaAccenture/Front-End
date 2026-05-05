@@ -1,0 +1,151 @@
+.deposito-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.deposito-card {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  border: 1px solid #eee;
+}
+
+.deposito-card h2 {
+  font-size: 20px;
+  margin-bottom: 25px;
+  color: #003087;
+}
+
+.deposito-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #003087;
+  box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
+}
+
+.btn-depositar {
+  padding: 14px;
+  background: #003087;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-depositar:hover:not(:disabled) {
+  background: #0a5a9e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 48, 135, 0.3);
+}
+
+.deposito-info {
+  background: white;
+  border-radius: 8px;
+  padding: 30px;
+  border: 1px solid #eee;
+}
+
+.deposito-info h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #003087;
+}
+
+.deposito-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.deposito-info li {
+  padding: 10px 0;
+  color: #555;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.deposito-info li:last-child {
+  border-bottom: none;
+}
+
+.dados-banco {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dado {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.dado .label {
+  color: #666;
+  font-weight: 600;
+}
+
+.dado .valor {
+  color: #333;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.success-alert {
+  background: #d4edda;
+  color: #155724;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .deposito-container {
+    grid-template-columns: 1fr;
+  }
+}

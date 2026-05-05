@@ -1,0 +1,135 @@
+.product-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(26, 92, 56, 0.1);
+  transform: translateY(-2px);
+}
+
+.product-image {
+  background: #f5f5f5;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-placeholder {
+  font-size: 48px;
+}
+
+.estoque-badge,
+.fora-estoque {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.estoque-badge {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.fora-estoque {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.product-info {
+  padding: 16px;
+}
+
+.product-name {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #222;
+}
+
+.product-category {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.product-sku {
+  font-size: 11px;
+  color: #bbb;
+  font-family: monospace;
+  margin-bottom: 10px;
+}
+
+.product-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.product-price {
+  color: #1a5c38;
+  font-weight: 700;
+}
+
+.product-stock {
+  color: #666;
+  font-size: 12px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.quantidade-input {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.btn-add-cart {
+  flex: 1;
+  padding: 8px;
+  background: #1a5c38;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.btn-add-cart:hover {
+  background: #0f3d25;
+}
+
+.btn-disabled {
+  width: 100%;
+  padding: 8px;
+  background: #eee;
+  color: #999;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  font-weight: 600;
+  font-size: 13px;
+}

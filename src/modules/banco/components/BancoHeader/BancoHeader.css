@@ -1,0 +1,57 @@
+.banco-header {
+  background: #003087;
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.banco-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.banco-user {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.banco-saldo-block {
+  text-align: right;
+}
+
+.banco-saldo-label {
+  font-size: 12px;
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.banco-saldo {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .banco-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .banco-saldo-block {
+    text-align: left;
+  }
+
+  .banco-saldo {
+    font-size: 24px;
+  }
+
+  .banco-title {
+    font-size: 20px;
+  }
+}
