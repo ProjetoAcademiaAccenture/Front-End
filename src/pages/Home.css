@@ -1,4 +1,4 @@
-.home {
+git switch -c link/front-back.home {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a2744 0%, #003087 50%, #1a5c38 100%);
   padding: 40px 20px;
