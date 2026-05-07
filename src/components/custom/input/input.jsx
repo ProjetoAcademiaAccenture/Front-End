@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { StyledInput, InputWrapper, ToggleButton, StyledTextArea } from "./input.styles";
 
@@ -21,15 +22,7 @@ export function Input({
     }
   }, [value, onLengthChange]);
 
-  // handler apenas para <input>
-  const handleInputChange = (e) => {
-    const newLen = e.target.value.length;
-    onLengthChange?.(newLen);
-    onChange?.(e);
-  };
-
-  // handler apenas para <textarea>
-  const handleTextAreaChange = (e) => {
+  const handleChange = (e) => {
     const newLen = e.target.value.length;
     onLengthChange?.(newLen);
     onChange?.(e);
@@ -43,7 +36,7 @@ export function Input({
           maxLength={maxLength}
           {...props}
           value={value ?? ""}
-          onChange={handleTextAreaChange}
+          onChange={handleChange}
         />
       ) : (
         <StyledInput
@@ -51,7 +44,7 @@ export function Input({
           type={isPassword && !show ? "password" : "text"}
           maxLength={maxLength}
           value={value ?? ""}
-          onChange={handleInputChange}
+          onChange={handleChange}
         />
       )}
 
@@ -66,3 +59,15 @@ export function Input({
     </InputWrapper>
   );
 }
+
+Input.propTypes = {
+  isPassword: PropTypes.bool,
+  isTextArea: PropTypes.bool,
+  hasError: PropTypes.bool,
+  className: PropTypes.string,
+  rows: PropTypes.number,
+  maxLength: PropTypes.number,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  onLengthChange: PropTypes.func,
+};

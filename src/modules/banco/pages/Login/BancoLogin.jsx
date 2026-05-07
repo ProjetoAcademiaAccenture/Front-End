@@ -27,7 +27,7 @@ export default function BancoLogin() {
         setErro(resultado.error);
       }
     } catch (err) {
-      setErro('Erro ao fazer login. Tente novamente.');
+      setErro(err.message || 'Erro ao fazer login. Tente novamente.');
     } finally {
       setCarregando(false);
     }
@@ -43,7 +43,7 @@ export default function BancoLogin() {
           {erro && <div className="error-message">{erro}</div>}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className="form-group-fullwidth">
               <label htmlFor="email">Email</label>
               <Input
                 id="email"
@@ -56,7 +56,7 @@ export default function BancoLogin() {
               />
             </div>
 
-            <div className="form-group">
+            <div className="form-group-fullwidth">
               <label htmlFor="senha">Senha</label>
               <Input
                 id="senha"
