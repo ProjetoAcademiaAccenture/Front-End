@@ -1,3 +1,7 @@
+.auth-container-register {
+  min-width: 80vw;
+}
+
 .btn-cadastro {
   width: 100%;
   padding: 12px;
@@ -30,4 +34,10 @@
   border-radius: 6px;
   margin-bottom: 20px;
   font-size: 14px;
+}
+
+@media (min-width: 1400px) {
+  .auth-container-register {
+    min-width: 1400px;
+  }
 }

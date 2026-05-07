@@ -23,7 +23,7 @@
   gap: 20px;
 }
 
-.form-group {
+/* .form-group {
   display: flex;
   flex-direction: column;
 }
@@ -48,7 +48,7 @@
 .form-group select:focus {
   border-color: #003087;
   box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.1);
-}
+} */
 
 .btn-depositar {
   padding: 14px;

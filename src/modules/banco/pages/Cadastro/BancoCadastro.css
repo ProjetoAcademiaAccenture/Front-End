@@ -1,4 +1,4 @@
-.btn-cadastro {
+.btn-cadastro-banco {
   width: 100%;
   padding: 12px;
   background: #003087;
@@ -12,13 +12,13 @@
   margin-top: 10px;
 }
 
-.btn-cadastro:hover:not(:disabled) {
+.btn-cadastro-banco:hover:not(:disabled) {
   background: #0a5a9e;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 48, 135, 0.3);
 }
 
-.btn-cadastro:disabled {
+.btn-cadastro-banco:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
