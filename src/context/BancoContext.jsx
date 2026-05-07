@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
 
 export const BancoContext = createContext();
 
@@ -70,4 +70,12 @@ export const BancoProvider = ({ children }) => {
       {children}
     </BancoContext.Provider>
   );
+};
+
+const acountProps = {
+  id: null,
+  numero: null,
+  tipo: null, // 'corrente', 'poupanca' ou 'PJ'
+  saldo: null,
+  idCLiente: null,
 };

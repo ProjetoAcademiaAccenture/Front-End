@@ -143,7 +143,7 @@ Front-end/
 AuthContext (Login/Logout)
 ├── user: Dados do usuário
 ├── isLoggedIn: Status de login
-└── userType: 'banco' | 'loja'
+└── tabBar: 'banco' | 'loja'
 ```
 
 ### Banco Digital

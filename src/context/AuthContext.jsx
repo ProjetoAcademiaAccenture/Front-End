@@ -1,48 +1,73 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState, useCallback, useMemo } from "react";
+import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(userProps);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState(null); // 'banco', 'loja', 'admin'
+  const [tabBar, settabBar] = useState(null); // 'loja', 'admin'
 
-  const login = (userData, type) => {
+  const login = useCallback((userData, type) => {
     setUser(userData);
-    setUserType(type);
+    settabBar(type);
     setIsLoggedIn(true);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('userType', type);
-  };
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("tabBar", type);
+  }, []);
 
-  const logout = () => {
-    setUser(null);
-    setUserType(null);
+  const logout = useCallback(() => {
+    setUser(userProps);
+    settabBar(null);
     setIsLoggedIn(false);
-    localStorage.removeItem('user');
-    localStorage.removeItem('userType');
-  };
+    localStorage.removeItem("user");
+    localStorage.removeItem("tabBar");
+  }, []);
 
-  const signup = (userData, type) => {
+  const signup = useCallback((userData, type) => {
     setUser(userData);
-    setUserType(type);
+    settabBar(type);
     setIsLoggedIn(true);
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('userType', type);
-  };
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("tabBar", type);
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoggedIn,
-        userType,
-        login,
-        logout,
-        signup,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      isLoggedIn,
+      tabBar,
+      login,
+      logout,
+      signup,
+    }),
+    [user, isLoggedIn, tabBar, login, logout, signup],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+const addressProps = {
+  cep: null,
+  logradouro: null,
+  numero: null,
+  complemento: null,
+  bairro: null,
+  cidade: null,
+  estado: null,
+};
+
+const userProps = {
+  id: null,
+  nome: null,
+  email: null,
+  tipo: null, // 'ROLE_ADMIN' ou 'ROLE_USER'
+  cpf: null,
+  telefone: null, // apenas números
+  dtNascimento: null, // formato ISO (YYYY-MM-DD)
+  endereco: { ...addressProps },
 };
