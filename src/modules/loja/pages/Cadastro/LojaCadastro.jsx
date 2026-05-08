@@ -17,7 +17,7 @@ import {
 } from "../../../../utils/formatters";
 
 export default function LojaCadastro() {
-  const { signup, setUser, setIsAuthenticated } = useContext(AuthContext);
+  const { signup } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -145,9 +145,11 @@ export default function LojaCadastro() {
 
       if (resultado.status === 200 || resultado.status === 201) {
         console.log("Resposta do cadastro:", resultado);
-        setSucesso("Cadastro realizado com sucesso!");
         const userData = resultado.data;
-        signup(userData, "loja");
+        
+        signup("loja", userData, userData.token);
+        setSucesso("Cadastro realizado com sucesso!");
+        navigate(ROUTES.PRODUCTS);
       } else {
         setErro(resultado.error);
         handleExibirMensagem(5000);

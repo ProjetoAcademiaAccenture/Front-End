@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../context/AuthContext';
 import { lojaAPI } from '../../services/lojaAPI';
 import { Input } from '../../../../components/custom/input/input';
 import './LojaLogin.css';
+import { ROUTES } from '../../../../constants';
 
 export default function LojaLogin() {
   const [email, setEmail] = useState('');
@@ -19,12 +20,19 @@ export default function LojaLogin() {
     setErro('');
 
     try {
-      const resultado = await lojaAPI.login(email, senha);
-      if (resultado.success) {
-        login(resultado.user, 'loja');
-        navigate('/loja/produtos');
+      const resultado = await lojaAPI.login({ email, senha });
+
+      if (resultado?.token) {
+        const userData = {
+          clienteId: resultado.clienteId,
+          nome: resultado.nome,
+          tipoCliente: resultado.tipoCliente,
+        };
+
+        login("loja", userData, resultado.token);
+        navigate(ROUTES.PRODUCTS);
       } else {
-        setErro(resultado.error);
+        setErro("Credenciais inválidas.");
       }
     } catch (err) {
       setErro( err.message || 'Erro ao fazer login. Tente novamente.');

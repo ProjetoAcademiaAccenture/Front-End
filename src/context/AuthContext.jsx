@@ -3,52 +3,82 @@ import PropTypes from "prop-types";
 
 export const AuthContext = createContext();
 
+const getStoredModule = (module) => {
+  const user = localStorage.getItem(`${module}_user`);
+  const token = localStorage.getItem(`${module}_token`);
+
+  return {
+    user: user ? JSON.parse(user) : null,
+    token,
+    isAuthenticated: !!token,
+  };
+};
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(userProps);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token"),
-  );
-  const [tabBar, setTabBar] = useState(null); // 'loja', 'admin'
+  const [auth, setAuth] = useState({
+    loja: getStoredModule("loja"),
+    banco: getStoredModule("banco"),
+  });
 
-  const login = useCallback((userData, type, token) => {
-    setUser({ ...userData, token });
-    setTabBar(type);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify({ ...userData, token }));
-    localStorage.setItem("tabBar", type);
-    if (token) localStorage.setItem("token", token);
+  const [activeModule, setActiveModule] = useState("loja");
+
+  const login = useCallback((module, userData, token) => {
+    const moduleData = {
+      user: userData,
+      token,
+      isAuthenticated: true,
+    };
+
+    setAuth((prev) => ({
+      ...prev,
+      [module]: moduleData,
+    }));
+
+    localStorage.setItem(`${module}_user`, JSON.stringify(userData));
+
+    localStorage.setItem(`${module}_token`, token);
   }, []);
 
-  const logout = useCallback(() => {
-    setUser(userProps);
-    setTabBar(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem("user");
-    localStorage.removeItem("tabBar");
-    localStorage.removeItem("token");
+  const logout = useCallback((module) => {
+    setAuth((prev) => ({
+      ...prev,
+      [module]: {
+        user: null,
+        token: null,
+        isAuthenticated: false,
+      },
+    }));
+
+    localStorage.removeItem(`${module}_user`);
+    localStorage.removeItem(`${module}_token`);
   }, []);
 
-  const signup = useCallback((userData, type) => {
-    setUser({ ...userData});
-    setTabBar(type);
-    setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify({ ...userData }));
-    localStorage.setItem("tabBar", type);
-    if (userData?.token) localStorage.setItem("token", userData.token);
+  const signup = useCallback((module, userData, token) => {
+    const moduleData = {
+      user: userData,
+      token,
+      isAuthenticated: true,
+    };
+
+    setAuth((prev) => ({
+      ...prev,
+      [module]: moduleData,
+    }));
+
+    localStorage.setItem(`${module}_user`, JSON.stringify(userData));
+    localStorage.setItem(`${module}_token`, token);
   }, []);
 
   const value = useMemo(
     () => ({
-      user,
-      setUser,
-      isAuthenticated,
-      setIsAuthenticated,
-      tabBar,
+      auth,
+      activeModule,
+      setActiveModule,
       login,
       logout,
       signup,
     }),
-    [user, setUser, isAuthenticated, setIsAuthenticated, tabBar, login, logout, signup],
+    [auth, activeModule, setActiveModule, login, logout, signup],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -56,11 +86,4 @@ export const AuthProvider = ({ children }) => {
 
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
-};
-
-const userProps = {
-  clienteId: null,
-  nome: null,
-  tipoCliente: null, // 'ROLE_ADMIN' ou 'ROLE_USER'
-  token: null,
 };

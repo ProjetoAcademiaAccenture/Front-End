@@ -6,7 +6,7 @@ import './BancoDashboard.css';
 
 export default function BancoDashboard() {
   const { saldo, transacoes } = useBanco();
-  const { user } = useContext(AuthContext);
+  const { auth, activeModule } = useContext(AuthContext);(AuthContext);
 
   return (
     <div className="banco-page">
