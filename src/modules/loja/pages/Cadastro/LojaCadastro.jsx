@@ -17,6 +17,7 @@ import {
 } from "../../../../utils/formatters";
 
 export default function LojaCadastro() {
+  const { signup, setUser, setIsAuthenticated } = useContext(AuthContext);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -34,63 +35,76 @@ export default function LojaCadastro() {
   const [tipoEndereco, setTipoEndereco] = useState("RESIDENCIAL");
   const [sucesso, setSucesso] = useState("");
   const [erro, setErro] = useState("");
+  const [exibirMensagem, setExibirMensagem] = useState(false);
   const [carregando, setCarregando] = useState(false);
-  const { signup } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const vatidateData = () => {
     if (!nome || nome.length < 3) {
       setErro("O nome deve conter pelo menos 3 caracteres");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setErro("Email inválido");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!senha || senha.length < 6) {
       setErro("A senha deve conter pelo menos 6 caracteres");
+      handleExibirMensagem(5000);
       return false;
     }
     if (senha !== confirmarSenha) {
       setErro("As senhas não conferem");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!cpf || !/^\d{11}$/.test(onlyNumbers(cpf))) {
       setErro("CPF inválido. Deve conter exatamente 11 números.");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!telefone || !/^\d{10,11}$/.test(onlyNumbers(telefone))) {
       setErro(
         "Telefone inválido. Deve conter apenas números e ter 10 ou 11 dígitos.",
       );
+      handleExibirMensagem(5000);
       return false;
     }
     if (!dataNascimento) {
       setErro("Data de nascimento é obrigatória");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!cep || !/^\d{8}$/.test(onlyNumbers(cep))) {
       setErro("CEP inválido. Deve conter exatamente 8 números.");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!logradouro) {
       setErro("Logradouro é obrigatório");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!numero) {
       setErro("Número é obrigatório");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!bairro) {
       setErro("Bairro é obrigatório");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!cidade) {
       setErro("Cidade é obrigatória");
+      handleExibirMensagem(5000);
       return false;
     }
     if (!estado) {
       setErro("Estado é obrigatório");
+      handleExibirMensagem(5000);
       return false;
     }
     return true;
@@ -130,16 +144,17 @@ export default function LojaCadastro() {
       const resultado = await lojaAPI.signup(payload);
 
       if (resultado.status === 200 || resultado.status === 201) {
+        console.log("Resposta do cadastro:", resultado);
         setSucesso("Cadastro realizado com sucesso!");
-        signup(resultado.user, "loja");
-        setTimeout(() => {
-          navigate(ROUTES.LOGIN_SHOP);
-        }, 1500);
+        const userData = resultado.data;
+        signup(userData, "loja");
       } else {
         setErro(resultado.error);
+        handleExibirMensagem(5000);
       }
     } catch (err) {
       setErro(err.message || "Erro ao fazer cadastro. Tente novamente.");
+      handleExibirMensagem(5000);
     } finally {
       setCarregando(false);
     }
@@ -160,8 +175,16 @@ export default function LojaCadastro() {
         setErro(
           err.message || "CEP não encontrado. Preencha os dados manualmente.",
         );
+        handleExibirMensagem(5000);
       }
     }
+  };
+
+  const handleExibirMensagem = (tempo) => {
+    setExibirMensagem(true);
+    setTimeout(() => {
+      setExibirMensagem(false);
+    }, tempo);
   };
 
   return (
@@ -171,7 +194,9 @@ export default function LojaCadastro() {
           <h1>🛍️ Loja Online</h1>
           <h2>Cadastro</h2>
 
-          {erro && <div className="error-message">{erro}</div>}
+          {erro && exibirMensagem && (
+            <div className="error-message">{erro}</div>
+          )}
           {sucesso && <div className="success-message">{sucesso}</div>}
 
           <form

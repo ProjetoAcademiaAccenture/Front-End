@@ -3,16 +3,11 @@ import api from "../../../services/api";
 export const lojaAPI = {
   login: async (credentials) => {
     const response = await api.post("/auth/login", credentials);
-
-    localStorage.setItem("token", response.data.token);
-
     return response.data;
   },
 
   signup: async (newUser) => {
     const response = await api.post("/auth/register", newUser);
-    localStorage.setItem("token", response.data.token);
-
     return response;
   },
 

@@ -8,43 +8,47 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     !!localStorage.getItem("token"),
   );
-  const [tabBar, settabBar] = useState(null); // 'loja', 'admin'
+  const [tabBar, setTabBar] = useState(null); // 'loja', 'admin'
 
-  const login = useCallback((userData, type) => {
-    setUser(userData);
-    settabBar(type);
+  const login = useCallback((userData, type, token) => {
+    setUser({ ...userData, token });
+    setTabBar(type);
     setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify({ ...userData, token }));
     localStorage.setItem("tabBar", type);
+    if (token) localStorage.setItem("token", token);
   }, []);
 
   const logout = useCallback(() => {
     setUser(userProps);
-    settabBar(null);
+    setTabBar(null);
     setIsAuthenticated(false);
     localStorage.removeItem("user");
     localStorage.removeItem("tabBar");
+    localStorage.removeItem("token");
   }, []);
 
   const signup = useCallback((userData, type) => {
-    setUser(userData);
-    settabBar(type);
+    setUser({ ...userData});
+    setTabBar(type);
     setIsAuthenticated(true);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", JSON.stringify({ ...userData }));
     localStorage.setItem("tabBar", type);
-    localStorage.removeItem("token");
+    if (userData?.token) localStorage.setItem("token", userData.token);
   }, []);
 
   const value = useMemo(
     () => ({
       user,
+      setUser,
       isAuthenticated,
+      setIsAuthenticated,
       tabBar,
       login,
       logout,
       signup,
     }),
-    [user, isAuthenticated, tabBar, login, logout, signup],
+    [user, setUser, isAuthenticated, setIsAuthenticated, tabBar, login, logout, signup],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -54,23 +58,9 @@ AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const addressProps = {
-  cep: null,
-  logradouro: null,
-  numero: null,
-  complemento: null,
-  bairro: null,
-  cidade: null,
-  estado: null,
-};
-
 const userProps = {
-  id: null,
+  clienteId: null,
   nome: null,
-  email: null,
-  tipo: null, // 'ROLE_ADMIN' ou 'ROLE_USER'
-  cpf: null,
-  telefone: null, // apenas números
-  dataNascimento: null, // formato ISO (YYYY-MM-DD)
-  endereco: { ...addressProps },
+  tipoCliente: null, // 'ROLE_ADMIN' ou 'ROLE_USER'
+  token: null,
 };
