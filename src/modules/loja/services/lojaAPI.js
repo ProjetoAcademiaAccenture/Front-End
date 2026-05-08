@@ -1,35 +1,20 @@
-import axios from "axios";
+import api from "../../../services/api";
 
-// Simulação de API da Loja
 export const lojaAPI = {
-  login: async (email, senha) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (email && senha) {
-          resolve({
-            success: true,
-            user: {
-              id: 1,
-              email,
-              nome: email.split("@")[0],
-              tipo: email.includes("admin") ? "admin" : "cliente",
-            },
-          });
-        } else {
-          resolve({ success: false, error: "Credenciais inválidas" });
-        }
-      }, 500);
-    });
+  login: async (credentials) => {
+    const response = await api.post("/auth/login", credentials);
+
+    localStorage.setItem("token", response.data.token);
+
+    return response.data;
   },
 
   signup: async (newUser) => {
-  const response = await axios.post(
-    "http://localhost:8080/api/clientes",
-    newUser
-  );
-  console.log("Resposta da API de cadastro:", response.data);
-  return response.data;
-},
+    const response = await api.post("/auth/register", newUser);
+    localStorage.setItem("token", response.data.token);
+
+    return response;
+  },
 
   getProdutos: async () => {
     return new Promise((resolve) => {

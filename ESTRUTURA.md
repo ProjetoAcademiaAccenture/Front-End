@@ -142,7 +142,7 @@ Front-end/
 ```
 AuthContext (Login/Logout)
 ├── user: Dados do usuário
-├── isLoggedIn: Status de login
+├── isAuthenticated: Status de login
 └── tabBar: 'banco' | 'loja'
 ```
 
