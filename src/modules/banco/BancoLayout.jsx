@@ -34,9 +34,9 @@ function BancoProtectedLayout() {
 }
 
 export default function BancoLayout() {
-  const { isLoggedIn, tabBar } = useContext(AuthContext);
+  const { isAuthenticated, tabBar } = useContext(AuthContext);
 
-  if (!isLoggedIn || tabBar !== 'banco') {
+  if (!isAuthenticated || tabBar !== 'banco') {
     return (
       <Routes>
         <Route path="/login" element={<BancoLogin />} />

@@ -5,13 +5,15 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(userProps);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("token"),
+  );
   const [tabBar, settabBar] = useState(null); // 'loja', 'admin'
 
   const login = useCallback((userData, type) => {
     setUser(userData);
     settabBar(type);
-    setIsLoggedIn(true);
+    setIsAuthenticated(true);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("tabBar", type);
   }, []);
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setUser(userProps);
     settabBar(null);
-    setIsLoggedIn(false);
+    setIsAuthenticated(false);
     localStorage.removeItem("user");
     localStorage.removeItem("tabBar");
   }, []);
@@ -27,21 +29,22 @@ export const AuthProvider = ({ children }) => {
   const signup = useCallback((userData, type) => {
     setUser(userData);
     settabBar(type);
-    setIsLoggedIn(true);
+    setIsAuthenticated(true);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("tabBar", type);
+    localStorage.removeItem("token");
   }, []);
 
   const value = useMemo(
     () => ({
       user,
-      isLoggedIn,
+      isAuthenticated,
       tabBar,
       login,
       logout,
       signup,
     }),
-    [user, isLoggedIn, tabBar, login, logout, signup],
+    [user, isAuthenticated, tabBar, login, logout, signup],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -68,6 +71,6 @@ const userProps = {
   tipo: null, // 'ROLE_ADMIN' ou 'ROLE_USER'
   cpf: null,
   telefone: null, // apenas números
-  dtNascimento: null, // formato ISO (YYYY-MM-DD)
+  dataNascimento: null, // formato ISO (YYYY-MM-DD)
   endereco: { ...addressProps },
 };

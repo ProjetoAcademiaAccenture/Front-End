@@ -48,9 +48,9 @@ function LojaProtectedLayout() {
 }
 
 export default function LojaLayout() {
-  const { isLoggedIn, tabBar } = useContext(AuthContext);
+  const { isAuthenticated, tabBar } = useContext(AuthContext);
 
-  if (!isLoggedIn || tabBar !== 'loja') {
+  if (!isAuthenticated || tabBar !== 'loja') {
     return (
       <Routes>
         <Route path="/login" element={<LojaLogin />} />

@@ -53,9 +53,9 @@ function BancoProtectedLayout() {
 }
 
 function BancoModuleRouter() {
-  const { isLoggedIn, tabBar } = useContext(AuthContext);
+  const { isAuthenticated, tabBar } = useContext(AuthContext);
 
-  if (!isLoggedIn || tabBar !== "banco") {
+  if (!isAuthenticated || tabBar !== "banco") {
     return (
       <Routes>
         <Route path="login" element={<BancoLogin />} />
@@ -101,9 +101,9 @@ function LojaProtectedLayout() {
 }
 
 function LojaModuleRouter() {
-  const { isLoggedIn, tabBar } = useContext(AuthContext);
+  const { isAuthenticated, tabBar } = useContext(AuthContext);
 
-  if (!isLoggedIn || tabBar !== "loja") {
+  if (!isAuthenticated || tabBar !== "loja") {
     return (
       <Routes>
         <Route path="login" element={<LojaLogin />} />
