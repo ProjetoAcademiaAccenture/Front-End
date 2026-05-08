@@ -5,6 +5,7 @@ import { lojaAPI } from '../../services/lojaAPI';
 import { Input } from '../../../../components/custom/input/input';
 import './LojaLogin.css';
 
+
 export default function LojaLogin() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
