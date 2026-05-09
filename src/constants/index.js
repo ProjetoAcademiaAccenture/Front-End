@@ -15,6 +15,7 @@ export const ROUTES = {
   PAYMENT_CARD: "loja/checkout/cartao",
   LOGIN_BANK: "banco/login",
   REGISTER_BANK: "banco/signup",
+  BANK_DASHBOARD: "banco/dashboard",
 };
 
 export const STORAGE_KEYS = {

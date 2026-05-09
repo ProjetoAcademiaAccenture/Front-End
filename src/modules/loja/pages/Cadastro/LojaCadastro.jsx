@@ -139,15 +139,20 @@ export default function LojaCadastro() {
     };
 
     try {
-      console.log("payload de cadastro:", payload);
-
       const resultado = await lojaAPI.signup(payload);
 
       if (resultado.status === 200 || resultado.status === 201) {
         console.log("Resposta do cadastro:", resultado);
-        const userData = resultado.data;
+        const data = resultado.data;
+
+        const lojaUser = {
+          clienteId: data.clienteId,
+          nome: data.nome,
+          email: data.email,
+          tipoCliente: data.tipoCliente,
+        };
         
-        signup("loja", userData, userData.token);
+        signup("loja", lojaUser, data.token);
         setSucesso("Cadastro realizado com sucesso!");
         navigate(ROUTES.PRODUCTS);
       } else {
