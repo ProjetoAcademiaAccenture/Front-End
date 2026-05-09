@@ -7,7 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../auth/context/AuthContext";
 
 import LojaLayout from "../modules/loja/LojaLayout";
 import BancoLayout from "../modules/banco/BancoLayout";

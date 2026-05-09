@@ -1,7 +1,4 @@
-import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-
-import { AuthContext } from "../../context/AuthContext";
 
 import LojaHeader from "./components/LojaHeader/LojaHeader";
 import LojaMenu from "./components/LojaMenu/LojaMenu";
@@ -13,24 +10,18 @@ import LojaProdutos from "./pages/Produtos/LojaProdutos";
 import LojaCarrinho from "./pages/Carrinho/LojaCarrinho";
 import LojaPagamento from "./pages/Pagamento/LojaPagamento";
 import LojaPedidos from "./pages/Pedidos/LojaPedidos";
-import LojaEstoque from "./pages/Estoque/LojaEstoque";
-import LojaAdmin from "./pages/Admin/LojaAdmin";
 import LojaPerfil from "./pages/Perfil/LojaPerfil";
+import LojaAdmin from "./pages/Admin/LojaAdmin";
+import LojaEstoque from "./pages/Estoque/LojaEstoque";
 
 import { useLojaContext } from "./hooks/useLojaContext";
+import { useModuleAuth } from "../../auth/hooks/useModuleAuth";
 
 import "./LojaLayout.css";
 
 export default function LojaLayout() {
-  const { auth } = useContext(AuthContext);
-
-  const lojaAuth = auth.loja;
-
-  const user = lojaAuth?.user;
-
-  const isAuthenticated = lojaAuth?.isAuthenticated;
-
   const { carrinho } = useLojaContext();
+  const { user, isAuthenticated } = useModuleAuth("loja");
 
   const isAdmin = user?.tipoCliente === "ROLE_ADMIN";
 
@@ -38,10 +29,8 @@ export default function LojaLayout() {
     return (
       <Routes>
         <Route path="login" element={<LojaLogin />} />
-
         <Route path="signup" element={<LojaCadastro />} />
-
-        <Route path="*" element={<Navigate to="login" />} />
+        <Route path="*" element={<Navigate to="login" replace />} />
       </Routes>
     );
   }
@@ -50,7 +39,7 @@ export default function LojaLayout() {
     <div className="loja-layout">
       <LojaHeader
         usuarioNome={user?.nome}
-        carrinhoQuantidade={carrinho.length}
+        carrinhoQuantidade={carrinho?.length ?? 0}
       />
 
       <LojaMenu isAdmin={isAdmin} />
@@ -58,24 +47,19 @@ export default function LojaLayout() {
       <div className="loja-content">
         <Routes>
           <Route path="produtos" element={<LojaProdutos />} />
-
           <Route path="carrinho" element={<LojaCarrinho />} />
-
           <Route path="pagamento" element={<LojaPagamento />} />
-
           <Route path="pedidos" element={<LojaPedidos />} />
-
           <Route path="perfil" element={<LojaPerfil />} />
 
           {isAdmin && (
             <>
               <Route path="admin" element={<LojaAdmin />} />
-
               <Route path="estoque" element={<LojaEstoque />} />
             </>
           )}
 
-          <Route path="*" element={<Navigate to="produtos" />} />
+          <Route path="*" element={<Navigate to="produtos" replace />} />
         </Routes>
       </div>
     </div>

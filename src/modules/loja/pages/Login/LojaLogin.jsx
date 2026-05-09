@@ -1,17 +1,18 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../../context/AuthContext';
 import { lojaAPI } from '../../services/lojaAPI';
 import { Input } from '../../../../components/custom/input/input';
-import './LojaLogin.css';
 import { ROUTES } from '../../../../constants';
+import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
+
+import './LojaLogin.css';
 
 export default function LojaLogin() {
+  const { login } = useModuleAuth("loja");
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

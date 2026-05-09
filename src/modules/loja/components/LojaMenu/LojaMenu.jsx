@@ -1,14 +1,13 @@
-import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../context/AuthContext";
-import "./LojaMenu.css";
 import { ROUTES } from "../../../../constants";
+import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+
+import "./LojaMenu.css";
 
 export default function LojaMenu({ isAdmin }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
-
+  const { logout } = useModuleAuth("loja");
   const isActive = (path) => location.pathname.includes(path);
 
   const handleLogout = () => {

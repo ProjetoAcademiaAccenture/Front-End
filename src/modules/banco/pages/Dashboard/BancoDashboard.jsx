@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
-import { useBanco } from '../../hooks/useBanco';
-import { AuthContext } from '../../../../context/AuthContext';
-import Extrato from '../../components/Extrato/Extrato';
-import './BancoDashboard.css';
+import { useBanco } from "../../hooks/useBanco";
+import Extrato from "../../components/Extrato/Extrato";
+import "./BancoDashboard.css";
+import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 
 export default function BancoDashboard() {
   const { saldo, transacoes } = useBanco();
-  const { auth, activeModule } = useContext(AuthContext);(AuthContext);
+  const { user } = useModuleAuth("loja");
 
   return (
     <div className="banco-page">
@@ -21,7 +20,11 @@ export default function BancoDashboard() {
           <div className="stat-content">
             <h3>Saldo Total</h3>
             <p className="stat-value">
-              R$ {saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              R${" "}
+              {(saldo ?? 0).toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </p>
           </div>
         </div>
@@ -39,10 +42,11 @@ export default function BancoDashboard() {
           <div className="stat-content">
             <h3>Créditos</h3>
             <p className="stat-value credito">
-              +R$ {transacoes
-                .filter((t) => t.tipo === 'credito')
+              +R${" "}
+              {transacoes
+                .filter((t) => t.tipo === "credito")
                 .reduce((sum, t) => sum + t.valor, 0)
-                .toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
             </p>
           </div>
         </div>
@@ -52,10 +56,11 @@ export default function BancoDashboard() {
           <div className="stat-content">
             <h3>Débitos</h3>
             <p className="stat-value debito">
-              -R$ {transacoes
-                .filter((t) => t.tipo === 'debito')
+              -R${" "}
+              {transacoes
+                .filter((t) => t.tipo === "debito")
                 .reduce((sum, t) => sum + t.valor, 0)
-                .toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
             </p>
           </div>
         </div>

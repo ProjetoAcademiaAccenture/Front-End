@@ -1,13 +1,13 @@
-import { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../context/AuthContext";
-import "./BancoMenu.css";
 import { ROUTES } from "../../../../constants";
+import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+
+import "./BancoMenu.css";
 
 export default function BancoMenu() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext);
+  const { logout } = useModuleAuth("banco");
 
   const isActive = (path) => location.pathname.includes(path);
 
@@ -42,7 +42,7 @@ export default function BancoMenu() {
       >
         👤 Perfil
       </Link>
-      <button onClick={handleLogout} className="menu-item logout">
+      <button type="button" onClick={handleLogout} className="menu-item logout">
         🚪 Sair
       </button>
     </nav>

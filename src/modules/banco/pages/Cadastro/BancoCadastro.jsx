@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../../context/AuthContext';
+import { AuthContext } from '../../../../auth/context/AuthContext';
 import { bancoAPI } from '../../services/bancoAPI';
 import { Input } from '../../../../components/custom/input/input';
 import './BancoCadastro.css';

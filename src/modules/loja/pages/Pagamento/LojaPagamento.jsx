@@ -1,19 +1,20 @@
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLojaContext } from '../../hooks/useLojaContext';
-import { useBanco } from '../../../banco/hooks/useBanco';
-import { BancoContext } from '../../../../context/BancoContext';
-import { lojaAPI } from '../../services/lojaAPI';
-import './LojaPagamento.css';
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLojaContext } from "../../hooks/useLojaContext";
+import { useBanco } from "../../../banco/hooks/useBanco";
+import { BancoContext } from "../../../../context/BancoContext";
+import { lojaAPI } from "../../services/lojaAPI";
+import "./LojaPagamento.css";
 
 export default function LojaPagamento() {
   const navigate = useNavigate();
-  const { carrinho, calcularTotal, finalizarPedido, criarPedido } = useLojaContext();
+  const { carrinho, calcularTotal, finalizarPedido, criarPedido } =
+    useLojaContext();
   const { processarPagamento } = useBanco();
   const { saldo } = useContext(BancoContext);
-  const [metodo, setMetodo] = useState('banco');
+  const [metodo, setMetodo] = useState("banco");
   const [processando, setProcessando] = useState(false);
-  const [mensagem, setMensagem] = useState('');
+  const [mensagem, setMensagem] = useState("");
 
   const total = calcularTotal();
   const desconto = total > 1000 ? total * 0.1 : 0;
@@ -27,7 +28,9 @@ export default function LojaPagamento() {
         </div>
         <div className="empty-state">
           <p>Seu carrinho está vazio</p>
-          <button onClick={() => navigate('/loja/produtos')}>Voltar aos Produtos</button>
+          <button onClick={() => navigate("/loja/produtos")}>
+            Voltar aos Produtos
+          </button>
         </div>
       </div>
     );
@@ -36,33 +39,36 @@ export default function LojaPagamento() {
   const handlePagamento = async (e) => {
     e.preventDefault();
     setProcessando(true);
-    setMensagem('');
+    setMensagem("");
 
     try {
-      if (metodo === 'banco') {
+      if (metodo === "banco") {
         if (saldo < totalComDesconto) {
-          setMensagem('Saldo insuficiente no banco');
+          setMensagem("Saldo insuficiente no banco");
           setProcessando(false);
           return;
         }
 
-        const sucesso = processarPagamento(totalComDesconto, 'Compra na Loja Online');
+        const sucesso = processarPagamento(
+          totalComDesconto,
+          "Compra na Loja Online",
+        );
         if (sucesso) {
           const pedido = criarPedido({
             itens: carrinho,
             total: totalComDesconto,
             desconto,
-            metodo: 'banco',
+            metodo: "banco",
           });
 
           finalizarPedido(pedido.id);
-          setMensagem('Pagamento realizado com sucesso!');
+          setMensagem("Pagamento realizado com sucesso!");
 
           setTimeout(() => {
-            navigate('/loja/pedidos');
+            navigate("/loja/pedidos");
           }, 2000);
         } else {
-          setMensagem('Erro ao processar pagamento');
+          setMensagem("Erro ao processar pagamento");
         }
       } else {
         const resultado = await lojaAPI.processarPagamento(totalComDesconto);
@@ -76,17 +82,17 @@ export default function LojaPagamento() {
           });
 
           finalizarPedido(pedido.id);
-          setMensagem('Pagamento realizado com sucesso!');
+          setMensagem("Pagamento realizado com sucesso!");
 
           setTimeout(() => {
-            navigate('/loja/pedidos');
+            navigate("/loja/pedidos");
           }, 2000);
         } else {
-          setMensagem('Erro ao processar pagamento');
+          setMensagem("Erro ao processar pagamento");
         }
       }
     } catch (err) {
-      setMensagem('Erro ao processar pagamento: ' + err.message);
+      setMensagem("Erro ao processar pagamento: " + err.message);
     } finally {
       setProcessando(false);
     }
@@ -100,7 +106,9 @@ export default function LojaPagamento() {
       </div>
 
       {mensagem && (
-        <div className={`mensagem ${mensagem.includes('sucesso') ? 'sucesso' : 'erro'}`}>
+        <div
+          className={`mensagem ${mensagem.includes("sucesso") ? "sucesso" : "erro"}`}
+        >
           {mensagem}
         </div>
       )}
@@ -116,12 +124,18 @@ export default function LojaPagamento() {
                   type="radio"
                   name="metodo"
                   value="banco"
-                  checked={metodo === 'banco'}
+                  checked={metodo === "banco"}
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
                 <span>🏦 Débito Bancário</span>
-                <small>Saldo disponível: R$ {saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</small>
+                <small>
+                  Saldo disponível: R${" "}
+                  {(saldo ?? 0).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </small>
               </label>
 
               <label className="metodo-option">
@@ -129,7 +143,7 @@ export default function LojaPagamento() {
                   type="radio"
                   name="metodo"
                   value="credito"
-                  checked={metodo === 'credito'}
+                  checked={metodo === "credito"}
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
@@ -142,7 +156,7 @@ export default function LojaPagamento() {
                   type="radio"
                   name="metodo"
                   value="pix"
-                  checked={metodo === 'pix'}
+                  checked={metodo === "pix"}
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
@@ -155,7 +169,7 @@ export default function LojaPagamento() {
                   type="radio"
                   name="metodo"
                   value="boleto"
-                  checked={metodo === 'boleto'}
+                  checked={metodo === "boleto"}
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
@@ -174,12 +188,10 @@ export default function LojaPagamento() {
               </ul>
             </div>
 
-            <button
-              type="submit"
-              className="btn-pagar"
-              disabled={processando}
-            >
-              {processando ? 'Processando...' : `💳 Pagar R$ ${totalComDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+            <button type="submit" className="btn-pagar" disabled={processando}>
+              {processando
+                ? "Processando..."
+                : `💳 Pagar R$ ${totalComDesconto.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
             </button>
           </form>
         </div>
@@ -190,9 +202,14 @@ export default function LojaPagamento() {
           <div className="resumo-itens">
             {carrinho.map((item) => (
               <div key={item.id} className="item-resumo">
-                <span>{item.nome} x{item.quantidade}</span>
                 <span>
-                  R$ {(item.preco * item.quantidade).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  {item.nome} x{item.quantidade}
+                </span>
+                <span>
+                  R${" "}
+                  {(item.preco * item.quantidade).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
               </div>
             ))}
@@ -201,13 +218,20 @@ export default function LojaPagamento() {
           <div className="resumo-totais">
             <div className="total-line">
               <span>Subtotal:</span>
-              <span>R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              <span>
+                R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </span>
             </div>
 
             {desconto > 0 && (
               <div className="total-line desconto">
                 <span>Desconto:</span>
-                <span>-R$ {desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span>
+                  -R${" "}
+                  {desconto.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
               </div>
             )}
 
@@ -218,13 +242,18 @@ export default function LojaPagamento() {
 
             <div className="total-line total">
               <span>Total:</span>
-              <span>R$ {totalComDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              <span>
+                R${" "}
+                {totalComDesconto.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </span>
             </div>
           </div>
 
           <button
             className="btn-voltar"
-            onClick={() => navigate('/loja/carrinho')}
+            onClick={() => navigate("/loja/carrinho")}
             disabled={processando}
           >
             Voltar ao Carrinho

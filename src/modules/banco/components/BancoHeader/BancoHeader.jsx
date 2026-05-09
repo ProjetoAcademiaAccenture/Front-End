@@ -1,5 +1,4 @@
-import React from 'react';
-import './BancoHeader.css';
+import "./BancoHeader.css";
 
 export default function BancoHeader({ saldo, usuarioNome }) {
   return (
@@ -11,7 +10,11 @@ export default function BancoHeader({ saldo, usuarioNome }) {
       <div className="banco-saldo-block">
         <span className="banco-saldo-label">Saldo disponível</span>
         <div className="banco-saldo">
-          R$ {saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          R${" "}
+          {(saldo ?? 0).toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </div>
       </div>
     </header>

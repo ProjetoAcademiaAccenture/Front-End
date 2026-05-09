@@ -1,16 +1,16 @@
-import React, { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../../context/AuthContext';
 import { bancoAPI } from '../../services/bancoAPI';
 import { Input } from '../../../../components/custom/input/input';
 import './BancoLogin.css';
+import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
 
 export default function BancoLogin() {
+  const { login } = useModuleAuth("banco");
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
-  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
