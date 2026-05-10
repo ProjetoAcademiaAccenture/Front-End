@@ -1,5 +1,6 @@
 import React from 'react';
 import './ProductCard.css';
+import {ShoppingCart } from 'lucide-react';
 
 export default function ProductCard({ produto, onAddToCart }) {
   const [quantidade, setQuantidade] = React.useState(1);
@@ -49,7 +50,7 @@ export default function ProductCard({ produto, onAddToCart }) {
               className="btn-add-cart"
               onClick={handleAdd}
             >
-              🛒 Adicionar
+              <ShoppingCart /> Adicionar
             </button>
           </div>
         ) : (
