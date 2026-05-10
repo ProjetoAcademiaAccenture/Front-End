@@ -5,6 +5,8 @@ import { useBanco } from '../../../banco/hooks/useBanco';
 import { BancoContext } from '../../../../context/BancoContext';
 import { lojaAPI } from '../../services/lojaAPI';
 import './LojaPagamento.css';
+import { Wallet,CreditCard,BanknoteArrowUp,SquareSplitHorizontal } from 'lucide-react';
+import { RiPixLine } from "react-icons/ri";
 
 export default function LojaPagamento() {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ export default function LojaPagamento() {
     return (
       <div className="loja-page">
         <div className="page-header">
-          <h1>💳 Pagamento</h1>
+          <h1><Wallet /> Pagamento</h1>
         </div>
         <div className="empty-state">
           <p>Seu carrinho está vazio</p>
@@ -95,7 +97,7 @@ export default function LojaPagamento() {
   return (
     <div className="loja-page">
       <div className="page-header">
-        <h1>💳 Pagamento</h1>
+        <h1><Wallet /> Pagamento</h1>
         <p className="page-subtitle">Finalize sua compra com segurança</p>
       </div>
 
@@ -120,7 +122,7 @@ export default function LojaPagamento() {
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
-                <span>🏦 Débito Bancário</span>
+                <span><BanknoteArrowUp /> Débito Bancário</span>
                 <small>Saldo disponível: R$ {saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</small>
               </label>
 
@@ -133,7 +135,7 @@ export default function LojaPagamento() {
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
-                <span>💳 Cartão de Crédito</span>
+                <span><CreditCard /> Cartão de Crédito</span>
                 <small>Parcelado em até 12x</small>
               </label>
 
@@ -146,7 +148,7 @@ export default function LojaPagamento() {
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
-                <span>📱 PIX</span>
+                <span><RiPixLine size={24}/> PIX</span>
                 <small>Pagamento instantâneo</small>
               </label>
 
@@ -159,7 +161,7 @@ export default function LojaPagamento() {
                   onChange={(e) => setMetodo(e.target.value)}
                   disabled={processando}
                 />
-                <span>🏷️ Boleto Bancário</span>
+                <span><SquareSplitHorizontal /> Boleto Bancário</span>
                 <small>Vencimento em 3 dias</small>
               </label>
             </div>
