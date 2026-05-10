@@ -26,13 +26,18 @@
 
 .metodo-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* 👈 muda aqui */
   gap: 12px;
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+.metodo-option span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .metodo-option:hover {

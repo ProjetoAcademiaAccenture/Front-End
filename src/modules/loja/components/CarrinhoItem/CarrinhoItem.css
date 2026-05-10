@@ -118,8 +118,30 @@
     flex: 0 1 calc(50% - 6px);
   }
 
-  .btn-remove {
-    flex: 0 1 30px;
-    align-self: flex-start;
-  }
+.btn-remove {
+  flex: 0 1 30px;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.btn-remove svg {
+  stroke: #ff5252;
+  transition: stroke 0.2s ease;
+}
+
+.btn-remove:hover svg {
+  stroke: #ff1744;
+}
+
+.btn-remove:hover {
+  background: #e00000;
+}
 }

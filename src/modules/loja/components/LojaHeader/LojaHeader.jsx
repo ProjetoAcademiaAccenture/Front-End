@@ -1,5 +1,6 @@
 import React from 'react';
 import './LojaHeader.css';
+import { ShoppingCart } from 'lucide-react';
 
 export default function LojaHeader({ usuarioNome, carrinhoQuantidade }) {
   return (
@@ -10,7 +11,8 @@ export default function LojaHeader({ usuarioNome, carrinhoQuantidade }) {
       </div>
       {carrinhoQuantidade > 0 && (
         <div className="carrinho-badge">
-          🛒 {carrinhoQuantidade} item{carrinhoQuantidade !== 1 ? 's' : ''}
+          <ShoppingCart style={{ marginRight: '10px' }} />
+          {carrinhoQuantidade} item{carrinhoQuantidade !== 1 ? 's' : ''}
         </div>
       )}
     </header>

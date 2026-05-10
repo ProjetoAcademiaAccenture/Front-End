@@ -1,5 +1,6 @@
 import React from 'react';
 import './CarrinhoItem.css';
+import { Trash } from 'lucide-react';
 
 export default function CarrinhoItem({ item, onQuantidadeChange, onRemove }) {
   return (
@@ -40,7 +41,8 @@ export default function CarrinhoItem({ item, onQuantidadeChange, onRemove }) {
         onClick={() => onRemove(item.id)}
         className="btn-remove"
       >
-        🗑️
+      <Trash color="#f80909"/>
+
       </button>
     </div>
   );
