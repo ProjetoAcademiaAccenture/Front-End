@@ -21,6 +21,8 @@
 }
 
 .carrinho-badge {
+  display: flex;
+  align-items: center;
   background: rgba(0, 0, 0, 0.2);
   padding: 8px 16px;
   border-radius: 20px;
