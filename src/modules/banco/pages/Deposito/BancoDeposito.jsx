@@ -3,6 +3,17 @@ import { useBanco } from '../../hooks/useBanco';
 import { Input } from '../../../../components/custom/input/input';
 import './BancoDeposito.css';
 
+import {
+  Wallet,
+  CreditCard,
+  Building2,
+  Smartphone,
+  CheckCircle,
+  Info,
+  Landmark,
+  Hash,
+} from 'lucide-react';
+
 export default function BancoDeposito() {
   const [valor, setValor] = useState('');
   const [metodo, setMetodo] = useState('debito');
@@ -22,9 +33,7 @@ export default function BancoDeposito() {
         setValor('');
         setCarregando(false);
 
-        setTimeout(() => {
-          setSucesso(false);
-        }, 3000);
+        setTimeout(() => setSucesso(false), 3000);
       }, 500);
     }
   };
@@ -32,13 +41,15 @@ export default function BancoDeposito() {
   return (
     <div className="banco-page">
       <div className="page-header">
-        <h1>💰 Depósito</h1>
+        <h1>
+          <Wallet size={22} /> Depósito
+        </h1>
         <p className="page-subtitle">Adicione fundos à sua conta</p>
       </div>
 
       {sucesso && (
         <div className="success-alert">
-          ✓ Depósito realizado com sucesso!
+          <CheckCircle size={18} /> Depósito realizado com sucesso!
         </div>
       )}
 
@@ -70,15 +81,27 @@ export default function BancoDeposito() {
                 onChange={(e) => setMetodo(e.target.value)}
                 disabled={carregando}
               >
-                <option value="debito">💳 Débito</option>
-                <option value="credito">💳 Crédito</option>
-                <option value="transferencia">🏦 Transferência Bancária</option>
-                <option value="pix">📱 PIX</option>
+                <option value="debito">
+                  <CreditCard size={16} /> Débito
+                </option>
+                <option value="credito">
+                  <CreditCard size={16} /> Crédito
+                </option>
+                <option value="transferencia">
+                  <Landmark size={16} /> Transferência Bancária
+                </option>
+                <option value="pix">
+                  <Smartphone size={16} /> PIX
+                </option>
               </select>
             </div>
 
             <div className="form-group">
-              <button type="submit" className="btn-depositar" disabled={carregando}>
+              <button
+                type="submit"
+                className="btn-depositar"
+                disabled={carregando}
+              >
                 {carregando ? 'Processando...' : 'Depositar'}
               </button>
             </div>
@@ -86,7 +109,10 @@ export default function BancoDeposito() {
         </div>
 
         <div className="deposito-info">
-          <h3>📌 Informações Importantes</h3>
+          <h3>
+            <Info size={18} /> Informações Importantes
+          </h3>
+
           <ul>
             <li>✓ Depósitos são processados em tempo real</li>
             <li>✓ Não há taxa para depósitos</li>
@@ -94,20 +120,30 @@ export default function BancoDeposito() {
             <li>✓ Todos os métodos de pagamento são seguros</li>
           </ul>
 
-          <h3 style={{ marginTop: '30px' }}>🏦 Dados para Transferência</h3>
+          <h3 style={{ marginTop: '30px' }}>
+            <Building2 size={18} /> Dados para Transferência
+          </h3>
+
           <div className="dados-banco">
             <div className="dado">
               <span className="label">Banco:</span>
               <span className="valor">Digital Bank</span>
             </div>
+
             <div className="dado">
-              <span className="label">Agência:</span>
+              <span className="label">
+                <Hash size={14} /> Agência:
+              </span>
               <span className="valor">0001</span>
             </div>
+
             <div className="dado">
-              <span className="label">Conta:</span>
+              <span className="label">
+                <Hash size={14} /> Conta:
+              </span>
               <span className="valor">1234567-8</span>
             </div>
+
             <div className="dado">
               <span className="label">CPF/CNPJ:</span>
               <span className="valor">12.345.678/0001-90</span>

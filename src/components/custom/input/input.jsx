@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { StyledInput, InputWrapper, ToggleButton, StyledTextArea } from "./input.styles";
+import { Eye,EyeClosed } from 'lucide-react';
 
 export function Input({
   isPassword = false,
@@ -53,7 +54,7 @@ export function Input({
           type="button"
           onClick={() => setShow(!show)}
         >
-          {show ? "🙈" : "👁️"}
+          {show ? <Eye /> : <EyeClosed />}
         </ToggleButton>
       )}
     </InputWrapper>

@@ -3,6 +3,16 @@ import Extrato from "../../components/Extrato/Extrato";
 import "./BancoDashboard.css";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 
+import {
+  LayoutDashboard,
+  Wallet,
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
+  ClipboardList,
+  Shield,
+} from 'lucide-react';
+
 export default function BancoDashboard() {
   const { saldo, transacoes } = useBanco();
   const { user } = useModuleAuth("loja");
@@ -10,13 +20,17 @@ export default function BancoDashboard() {
   return (
     <div className="banco-page">
       <div className="page-header">
-        <h1>📊 Dashboard</h1>
+        <h1>
+          <LayoutDashboard size={22} /> Dashboard
+        </h1>
         <p className="page-subtitle">Visão geral da sua conta</p>
       </div>
 
       <div className="dashboard-grid">
         <div className="stat-card">
-          <div className="stat-icon">💰</div>
+          <div className="stat-icon">
+            <Wallet size={20} />
+          </div>
           <div className="stat-content">
             <h3>Saldo Total</h3>
             <p className="stat-value">
@@ -30,7 +44,9 @@ export default function BancoDashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📊</div>
+          <div className="stat-icon">
+            <BarChart3 size={20} />
+          </div>
           <div className="stat-content">
             <h3>Total de Transações</h3>
             <p className="stat-value">{transacoes.length}</p>
@@ -38,7 +54,9 @@ export default function BancoDashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📈</div>
+          <div className="stat-icon">
+            <TrendingUp size={20} />
+          </div>
           <div className="stat-content">
             <h3>Créditos</h3>
             <p className="stat-value credito">
@@ -52,7 +70,9 @@ export default function BancoDashboard() {
         </div>
 
         <div className="stat-card">
-          <div className="stat-icon">📉</div>
+          <div className="stat-icon">
+            <TrendingDown size={20} />
+          </div>
           <div className="stat-content">
             <h3>Débitos</h3>
             <p className="stat-value debito">
@@ -70,15 +90,20 @@ export default function BancoDashboard() {
 
       <div className="info-cards">
         <div className="info-card">
-          <h3>📋 Informações da Conta</h3>
+          <h3>
+            <ClipboardList size={18} /> Informações da Conta
+          </h3>
+
           <div className="info-item">
             <span className="label">Nome:</span>
             <span className="value">{user?.nome}</span>
           </div>
+
           <div className="info-item">
             <span className="label">Email:</span>
             <span className="value">{user?.email}</span>
           </div>
+
           <div className="info-item">
             <span className="label">Conta:</span>
             <span className="value">{user?.conta}</span>
@@ -86,7 +111,10 @@ export default function BancoDashboard() {
         </div>
 
         <div className="info-card">
-          <h3>🔒 Segurança</h3>
+          <h3>
+            <Shield size={18} /> Segurança
+          </h3>
+
           <button className="btn-secondary">Alterar Senha</button>
           <button className="btn-secondary">Ativar 2FA</button>
         </div>

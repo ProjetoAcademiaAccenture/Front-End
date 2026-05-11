@@ -7,6 +7,7 @@ import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
 
 import './LojaLogin.css';
 
+
 export default function LojaLogin() {
   const { login } = useModuleAuth("loja");
   const [email, setEmail] = useState('');

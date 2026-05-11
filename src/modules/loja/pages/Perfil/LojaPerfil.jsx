@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../auth/context/AuthContext';
+import { MapPinHouse,NotebookTabs,User,Users,UserStar,LogOut,Trash } from 'lucide-react';
+
 import './LojaPerfil.css';
 
 export default function LojaPerfil() {
@@ -15,7 +17,7 @@ export default function LojaPerfil() {
   return (
     <div className="loja-page">
       <div className="page-header">
-        <h1>👤 Perfil</h1>
+        <h1><User /> Perfil</h1>
         <p className="page-subtitle">Gerencie seus dados pessoais</p>
       </div>
 
@@ -36,7 +38,17 @@ export default function LojaPerfil() {
           <div className="info-row">
             <span className="info-label">Tipo de Conta:</span>
             <span className="info-value">
-              {user?.tipo === 'admin' ? '👨‍💼 Administrador' : '👥 Cliente'}
+            {user?.tipo === 'admin' ? (
+                <>
+                  <UserStar size={16} style={{ marginRight: '6px' }} />
+                  Administrador
+                </> 
+              ) : (
+                <>
+                  <Users size={16} style={{ marginRight: '6px' }} />
+                  Cliente
+                </>
+              )}
             </span>
           </div>
 
@@ -49,8 +61,8 @@ export default function LojaPerfil() {
         <div className="perfil-card">
           <h2>Endereço de Entrega</h2>
 
-          <button className="btn-action">📍 Adicionar/Editar Endereço</button>
-          <button className="btn-action">🗂️ Meus Endereços</button>
+          <button className="btn-action"> <MapPinHouse size={16} /> Adicionar/Editar Endereço</button>
+          <button className="btn-action"><NotebookTabs size={16} /> Meus Endereços</button>
         </div>
 
         <div className="perfil-card">
@@ -81,7 +93,7 @@ export default function LojaPerfil() {
           <div className="perfil-card admin">
             <h2>⚙️ Painel Administrativo</h2>
             <p>Você tem acesso às ferramentas administrativas da loja.</p>
-            <button className="btn-action">📊 Dashboard Admin</button>
+            <button className="btn-action"><NotebookTabs size={16} /> Dashboard Admin</button>
           </div>
         )}
 
@@ -89,10 +101,10 @@ export default function LojaPerfil() {
           <h2>Zona de Perigo</h2>
 
           <button className="btn-logout" onClick={handleLogout}>
-            🚪 Sair da Conta
+            <LogOut size={16} /> Sair da Conta
           </button>
 
-          <button className="btn-delete">⚠️ Deletar Conta</button>
+          <button className="btn-delete"><Trash size={16} /> Deletar Conta</button>
 
           <p className="warning-text">
             Atenção: Deletar sua conta é permanente. Todos os dados serão removidos.

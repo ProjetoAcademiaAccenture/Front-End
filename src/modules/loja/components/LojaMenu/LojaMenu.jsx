@@ -3,6 +3,7 @@ import { ROUTES } from "../../../../constants";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 
 import "./LojaMenu.css";
+import { LogOut,User,ShelvingUnit,PackageOpen,ShoppingCart,ReceiptText,UserStar } from 'lucide-react';
 
 export default function LojaMenu({ isAdmin }) {
   const location = useLocation();
@@ -21,21 +22,21 @@ export default function LojaMenu({ isAdmin }) {
         to="/loja/produtos"
         className={`menu-item ${isActive("/produtos") ? "active" : ""}`}
       >
-        📦 Produtos
+        <PackageOpen /> Produtos
       </Link>
 
       <Link
         to="/loja/carrinho"
         className={`menu-item ${isActive("/carrinho") ? "active" : ""}`}
       >
-        🛒 Carrinho
+        <ShoppingCart /> Carrinho
       </Link>
 
       <Link
         to="/loja/pedidos"
         className={`menu-item ${isActive("/pedidos") ? "active" : ""}`}
       >
-        📋 Meus Pedidos
+        <ReceiptText /> Meus Pedidos
       </Link>
 
       {isAdmin && (
@@ -44,14 +45,14 @@ export default function LojaMenu({ isAdmin }) {
             to="/loja/admin"
             className={`menu-item ${isActive("/admin") ? "active" : ""}`}
           >
-            👨‍💼 Admin
+            <UserStar /> Admin
           </Link>
 
           <Link
             to="/loja/estoque"
             className={`menu-item ${isActive("/estoque") ? "active" : ""}`}
           >
-            📊 Estoque
+            <ShelvingUnit /> Estoque
           </Link>
         </>
       )}
@@ -60,7 +61,7 @@ export default function LojaMenu({ isAdmin }) {
         to="/loja/perfil"
         className={`menu-item ${isActive("/perfil") ? "active" : ""}`}
       >
-        👤 Perfil
+        <User /> Perfil
       </Link>
 
       <button type="button" className="menu-item logout" onClick={handleLogout}>
