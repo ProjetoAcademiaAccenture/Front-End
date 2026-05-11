@@ -142,7 +142,6 @@ export default function LojaCadastro() {
       const resultado = await lojaAPI.signup(payload);
 
       if (resultado.status === 200 || resultado.status === 201) {
-        console.log("Resposta do cadastro:", resultado);
         const data = resultado.data;
 
         const lojaUser = {
@@ -221,7 +220,7 @@ export default function LojaCadastro() {
                 type="text"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                placeholder="João Silva"
+                placeholder="Ximira Xelo"
                 required
                 disabled={carregando}
               />
@@ -234,7 +233,7 @@ export default function LojaCadastro() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu@email.com"
+                placeholder="ximira@email.com"
                 required
                 disabled={carregando}
               />
