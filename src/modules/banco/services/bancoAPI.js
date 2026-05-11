@@ -1,6 +1,5 @@
 import api from "../../../services/api";
 
-// Simulação de API do Banco
 export const bancoAPI = {
   login: async (credentials) => {
     const response = await api.post("/auth/login-bank", credentials);
