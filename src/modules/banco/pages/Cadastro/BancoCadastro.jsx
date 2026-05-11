@@ -10,7 +10,7 @@ import { ROUTES } from "../../../../constants";
 const TIPOS_CONTA = [
   { label: "Conta Corrente", value: "CORRENTE" },
   { label: "Conta Poupança", value: "POUPANCA" },
-  { label: "Conta PJ", value: "PJ" },
+  { label: "Conta Jurídica", value: "JURIDICA" },
 ];
 
 export default function BancoCadastro() {
@@ -124,7 +124,7 @@ export default function BancoCadastro() {
 
             <div className="auth-footer">
               <p>
-                <Link to={ROUTES.LOJA_LOGIN}>Ir para login da loja</Link>
+                <Link to={ROUTES.LOGIN_SHOP}>Ir para login da loja</Link>
               </p>
             </div>
           </div>
