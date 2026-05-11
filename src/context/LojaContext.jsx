@@ -13,6 +13,8 @@ export const LojaProvider = ({ children }) => {
   const [carrinho, setCarrinho] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [faturamento, setFaturamento] = useState(0);
+  const [boletos, setBoletos] = useState([]);
+  const [boletoAtual, setBoletoAtual] = useState(null);
 
   const adicionarAoCarrinho = useCallback((produto, quantidade) => {
     const existe = carrinho.find((item) => item.id === produto.id);
@@ -98,6 +100,22 @@ export const LojaProvider = ({ children }) => {
     ]);
   }, []);
 
+  const adicionarBoleto = useCallback((boleto) => {
+    setBoletos((prev) => [...prev, boleto]);
+    setBoletoAtual(boleto);
+  }, []);
+
+  const atualizarBoleto = useCallback((boletoId, dadosAtualizados) => {
+    setBoletos((prev) =>
+      prev.map((boleto) =>
+        boleto.id === boletoId ? { ...boleto, ...dadosAtualizados } : boleto
+      )
+    );
+    if (boletoAtual?.id === boletoId) {
+      setBoletoAtual((prev) => ({ ...prev, ...dadosAtualizados }));
+    }
+  }, [boletoAtual]);
+
   return (
     <LojaContext.Provider
       value={{
@@ -109,6 +127,10 @@ export const LojaProvider = ({ children }) => {
         setPedidos,
         faturamento,
         setFaturamento,
+        boletos,
+        setBoletos,
+        boletoAtual,
+        setBoletoAtual,
         adicionarAoCarrinho,
         removerDoCarrinho,
         atualizarQuantidadeCarrinho,
@@ -117,6 +139,8 @@ export const LojaProvider = ({ children }) => {
         finalizarPedido,
         atualizarEstoque,
         adicionarProduto,
+        adicionarBoleto,
+        atualizarBoleto,
       }}
     >
       {children}

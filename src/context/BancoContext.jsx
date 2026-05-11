@@ -14,6 +14,7 @@ export const BancoProvider = ({ children }) => {
     },
   ]);
   const [extratoVisible, setExtratoVisible] = useState(true);
+  const [boletos, setBoletos] = useState([]);
 
   const adicionarTransacao = useCallback((descricao, tipo, valor) => {
     const novaTransacao = {
@@ -53,6 +54,18 @@ export const BancoProvider = ({ children }) => {
     return false;
   }, [saldo, adicionarTransacao]);
 
+  const adicionarBoleto = useCallback((boleto) => {
+    setBoletos((prev) => [...prev, boleto]);
+  }, []);
+
+  const atualizarBoleto = useCallback((boletoId, dadosAtualizados) => {
+    setBoletos((prev) =>
+      prev.map((boleto) =>
+        boleto.id === boletoId ? { ...boleto, ...dadosAtualizados } : boleto
+      )
+    );
+  }, []);
+
   return (
     <BancoContext.Provider
       value={{
@@ -65,6 +78,10 @@ export const BancoProvider = ({ children }) => {
         processarPagamento,
         extratoVisible,
         setExtratoVisible,
+        boletos,
+        setBoletos,
+        adicionarBoleto,
+        atualizarBoleto,
       }}
     >
       {children}

@@ -29,4 +29,50 @@ export const lojaAPI = {
       }, 1000);
     });
   },
+
+  // Métodos de Boleto
+  gerarBoleto: async (pedidoId) => {
+    try {
+      const response = await api.post(`/api/boletos/gerar/${pedidoId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  buscarBoleto: async (boletoId) => {
+    try {
+      const response = await api.get(`/api/boletos/${boletoId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  buscarBoletoPorPedido: async (pedidoId) => {
+    try {
+      const response = await api.get(`/api/boletos/pedido/${pedidoId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  pagarBoleto: async (boletoId) => {
+    try {
+      const response = await api.patch(`/api/boletos/${boletoId}/pagar`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  cancelarBoleto: async (boletoId) => {
+    try {
+      const response = await api.patch(`/api/boletos/${boletoId}/cancelar`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
 };

@@ -21,4 +21,32 @@ export const bancoAPI = {
       }, 300);
     });
   },
+
+  // Métodos de Boleto
+  buscarBoleto: async (boletoId) => {
+    try {
+      const response = await api.get(`/api/boletos/${boletoId}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  pagarBoleto: async (boletoId) => {
+    try {
+      const response = await api.patch(`/api/boletos/${boletoId}/pagar`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  cancelarBoleto: async (boletoId) => {
+    try {
+      const response = await api.patch(`/api/boletos/${boletoId}/cancelar`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
 };
