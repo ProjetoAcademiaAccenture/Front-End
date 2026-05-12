@@ -10,12 +10,11 @@ import {
   TrendingUp,
   TrendingDown,
   ClipboardList,
-  Shield,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function BancoDashboard() {
   const { saldo, transacoes } = useBanco();
-  const { user } = useModuleAuth("loja");
+  const { user } = useModuleAuth("banco");
 
   return (
     <div className="banco-page">
@@ -106,17 +105,8 @@ export default function BancoDashboard() {
 
           <div className="info-item">
             <span className="label">Conta:</span>
-            <span className="value">{user?.conta}</span>
+            <span className="value">{user?.numeroConta}</span>
           </div>
-        </div>
-
-        <div className="info-card">
-          <h3>
-            <Shield size={18} /> Segurança
-          </h3>
-
-          <button className="btn-secondary">Alterar Senha</button>
-          <button className="btn-secondary">Ativar 2FA</button>
         </div>
       </div>
     </div>

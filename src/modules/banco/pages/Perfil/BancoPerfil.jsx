@@ -1,29 +1,29 @@
-import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../../auth/context/AuthContext';
-import './BancoPerfil.css';
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../auth/context/AuthContext";
+import "./BancoPerfil.css";
 
 import {
   User,
   Mail,
   CreditCard,
   Shield,
-  KeyRound,
-  Smartphone,
-  Bell,
   LogOut,
   Trash2,
   AlertTriangle,
-} from 'lucide-react';
+} from "lucide-react";
+import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+import { ROUTES } from "../../../../constants";
 
 export default function BancoPerfil() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useModuleAuth("banco");
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
+      logout("banco");
+      navigate(ROUTES.LOGIN_BANK);
+    };
 
   return (
     <div className="banco-page">
@@ -31,13 +31,10 @@ export default function BancoPerfil() {
         <h1>
           <User size={22} /> Perfil
         </h1>
-        <p className="page-subtitle">
-          Gerencie suas informações pessoais
-        </p>
+        <p className="page-subtitle">Gerencie suas informações pessoais</p>
       </div>
 
       <div className="perfil-container">
-
         {/* INFORMAÇÕES */}
         <div className="perfil-card">
           <h2>Informações Pessoais</h2>
@@ -55,7 +52,7 @@ export default function BancoPerfil() {
               <CreditCard size={16} />
               <span className="info-label">Conta:</span>
             </div>
-            <span className="info-value">{user?.conta}</span>
+            <span className="info-value">{user?.numeroConta}</span>
           </div>
 
           <div className="info-row">
@@ -74,31 +71,16 @@ export default function BancoPerfil() {
             <span className="info-value">Pessoa Física</span>
           </div>
 
-          <div className="info-row">
-            <div className="info-left">
-              <KeyRound size={16} />
-              <span className="info-label">CPF:</span>
-            </div>
-            <span className="info-value">•••.•••.•••-••</span>
-          </div>
         </div>
 
         {/* SEGURANÇA */}
-        <div className="perfil-card">
+        {/* <div className="perfil-card">
           <h2>Configurações de Segurança</h2>
-
           <button className="btn-action">
             <KeyRound size={16} /> Alterar Senha
           </button>
-
-          <button className="btn-action">
-            <Smartphone size={16} /> Autenticação de Dois Fatores
-          </button>
-
-          <button className="btn-action">
-            <Bell size={16} /> Notificações de Segurança
-          </button>
-        </div>
+          
+        </div> */}
 
         {/* ZONA DE PERIGO */}
         <div className="perfil-card danger">
@@ -113,10 +95,10 @@ export default function BancoPerfil() {
           </button>
 
           <p className="warning-text">
-            <AlertTriangle size={16} /> Atenção: Deletar sua conta é permanente e não pode ser revertido.
+            <AlertTriangle size={16} /> Atenção: Deletar sua conta é permanente
+            e não pode ser revertido.
           </p>
         </div>
-
       </div>
     </div>
   );

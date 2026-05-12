@@ -7,6 +7,8 @@ import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 import { onlyNumbers } from "../../../../utils/formatters";
 
 export default function BancoLogin() {
+  const { user: lojaUser } =
+    useModuleAuth("loja");
   const { login } = useModuleAuth("banco");
   const [numeroConta, setNumeroConta] = useState("");
   const [senha, setSenha] = useState("");
@@ -36,7 +38,10 @@ export default function BancoLogin() {
           contaId: resultado.contaId,
           numeroConta: resultado.numeroConta,
           saldo: resultado.saldo,
+          limiteCeditoDisponivel: resultado.limiteCeditoDisponivel,
           tipoConta: resultado.tipoConta,
+          nome: lojaUser.nome,
+          email: lojaUser.email,
         };
 
         login(userData, resultado.token);

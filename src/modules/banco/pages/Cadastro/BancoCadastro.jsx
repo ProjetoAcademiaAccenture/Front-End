@@ -92,6 +92,8 @@ export default function BancoCadastro() {
           contaId: data.contaId ?? null,
           numeroConta: data.numeroConta ?? null,
           tipoConta: data.tipoConta ?? tipoConta,
+          saldo: data.saldo ?? 0,
+          limiteCeditoDisponivel: data.limiteCeditoDisponivel ?? 0,
         };
 
         signupBanco(bancoUser, data.token);

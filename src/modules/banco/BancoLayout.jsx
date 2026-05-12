@@ -28,7 +28,11 @@ export default function BancoLayout() {
 
   return (
     <div className="banco-layout">
-      <BancoHeader usuarioNome={user?.nome} />
+      <BancoHeader
+        usuarioNome={user?.nome}
+        saldo={user?.saldo}
+        limite={user?.limiteCeditoDisponivel}
+      />
       <BancoMenu isAdmin={isAdmin} />
 
       <div className="banco-content">
