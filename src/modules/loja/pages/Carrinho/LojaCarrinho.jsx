@@ -22,8 +22,6 @@ export default function LojaCarrinho() {
   const [notificacao, setNotificacao] = useState("");
 
   const total = calcularTotal();
-  const desconto = total > 1000 ? total * 0.1 : 0;
-  const totalComDesconto = total - desconto;
 
   const handleFinalizarPedido = async () => {
     if (!user?.clienteId) return;
@@ -38,7 +36,6 @@ export default function LojaCarrinho() {
       };
       const resultado = await lojaAPI.finalizarPedido(pedido);
       if (resultado.status === 201) {
-        console.log("Pedido finalizado:", resultado.data);
         setNotificacao("Pedido finalizado com sucesso!");
         setTimeout(() => {
           setNotificacao("");
@@ -101,23 +98,6 @@ export default function LojaCarrinho() {
               </span>
             </div>
 
-            {desconto > 0 && (
-              <>
-                <div className="resumo-item desconto">
-                  <span>Desconto (10%):</span>
-                  <span>
-                    -R${" "}
-                    {desconto.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-                <div className="info-desconto">
-                  ✓ Desconto aplicado para compras acima de R$ 1.000
-                </div>
-              </>
-            )}
-
             <div className="resumo-item frete">
               <span>Frete:</span>
               <span>Grátis</span>
@@ -143,12 +123,7 @@ export default function LojaCarrinho() {
 
             <div className="resumo-total">
               <span>Total:</span>
-              <span>
-                R${" "}
-                {totalComDesconto.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
-              </span>
+              <span>R$ </span>
             </div>
 
             <button className="btn-finalizar" onClick={handleFinalizarPedido}>
