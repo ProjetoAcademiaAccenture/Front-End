@@ -7,6 +7,7 @@ import BancoDashboard from "./pages/Dashboard/BancoDashboard";
 import BancoTransacoes from "./pages/Transacoes/BancoTransacoes";
 import BancoDeposito from "./pages/Deposito/BancoDeposito";
 import BancoPerfil from "./pages/Perfil/BancoPerfil";
+import Confirmacao from "./pages/confimacaoCadastro/Confirmacao";
 import { useModuleAuth } from "../../auth/hooks/useModuleAuth";
 
 import "./BancoLayout.css";
@@ -22,6 +23,7 @@ export default function BancoLayout() {
         <Route path="login" element={<BancoLogin />} />
         <Route path="signup" element={<BancoCadastro />} />
         <Route path="*" element={<Navigate to="login" replace />} />
+        <Route path="confirmacao" element={<Confirmacao />} />
       </Routes>
     );
   }

@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../../../auth/context/AuthContext";
-import "./BancoPerfil.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
+import './BancoPerfil.css';
 
 import {
   User,
@@ -11,19 +11,17 @@ import {
   LogOut,
   Trash2,
   AlertTriangle,
-} from "lucide-react";
-import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
-import { ROUTES } from "../../../../constants";
+  Landmark,
+} from 'lucide-react';
 
 export default function BancoPerfil() {
-  const { user, logout } = useModuleAuth("banco");
-
+  const { user, logout } = useModuleAuth('banco');
   const navigate = useNavigate();
 
   const handleLogout = () => {
-      logout("banco");
-      navigate(ROUTES.LOGIN_BANK);
-    };
+    logout();
+    navigate('/banco/login');
+  };
 
   return (
     <div className="banco-page">
@@ -38,6 +36,14 @@ export default function BancoPerfil() {
         {/* INFORMAÇÕES */}
         <div className="perfil-card">
           <h2>Informações Pessoais</h2>
+
+          <div className="info-row">
+            <div className="info-left">
+              <User size={16} />
+              <span className="info-label">Nome:</span>
+            </div>
+            <span className="info-value">{user?.nome}</span>
+          </div>
 
           <div className="info-row">
             <div className="info-left">
@@ -57,20 +63,19 @@ export default function BancoPerfil() {
 
           <div className="info-row">
             <div className="info-left">
-              <User size={16} />
-              <span className="info-label">Nome:</span>
+              <Landmark size={16} />
+              <span className="info-label">Tipo:</span>
             </div>
-            <span className="info-value">{user?.nome}</span>
+            <span className="info-value">{user?.tipoConta}</span>
           </div>
 
           <div className="info-row">
             <div className="info-left">
               <Shield size={16} />
-              <span className="info-label">Tipo:</span>
+              <span className="info-label">CPF:</span>
             </div>
-            <span className="info-value">Pessoa Física</span>
+            <span className="info-value">•••.•••.•••-••</span>
           </div>
-
         </div>
 
         {/* SEGURANÇA */}

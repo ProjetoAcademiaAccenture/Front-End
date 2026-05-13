@@ -11,14 +11,20 @@ export const bancoAPI = {
     return response;
   },
 
-  getTransacoes: async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          transacoes: [],
-        });
-      }, 300);
+  getConta: async (contaId) => {
+    const response = await api.get(`/api/contas/${contaId}`);
+    return response.data;
+  },
+
+  getExtrato: async (contaId, params = {}) => {
+    const response = await api.get(`/api/contas/${contaId}/extrato`, { params });
+    return response.data;
+  },
+
+  depositar: async (contaId, valor) => {
+    const response = await api.patch(`/api/contas/${contaId}/depositar`, null, {
+      params: { valor },
     });
+    return response.data;
   },
 };

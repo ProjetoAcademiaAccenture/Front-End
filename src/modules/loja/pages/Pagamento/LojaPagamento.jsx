@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLojaContext } from "../../hooks/useLojaContext";
 import { useBanco } from "../../../banco/hooks/useBanco";
-import { BancoContext } from "../../../../context/BancoContext";
+import { BancoContext } from "../../../banco/context/BancoContext";
 import { lojaAPI } from "../../services/lojaAPI";
 import "./LojaPagamento.css";
 import { Wallet,CreditCard,BanknoteArrowUp,SquareSplitHorizontal } from 'lucide-react';

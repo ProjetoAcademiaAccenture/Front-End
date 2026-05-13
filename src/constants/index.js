@@ -16,6 +16,7 @@ export const ROUTES = {
   LOGIN_BANK: "banco/login",
   REGISTER_BANK: "banco/signup",
   BANK_DASHBOARD: "banco/dashboard",
+  CONFIRMACAO: "banco/confirmacao",
 };
 
 export const STORAGE_KEYS = {

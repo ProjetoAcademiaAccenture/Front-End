@@ -10,7 +10,14 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    // pega o token do módulo correto baseado na URL
+    let token = null;
+
+    if (config.url?.includes('/api/contas') || config.url?.includes('/auth/login-bank') || config.url?.includes('/auth/register-bank')) {
+      token = localStorage.getItem('banco_token');
+    } else {
+      token = localStorage.getItem('loja_token') ?? localStorage.getItem('token');
+    }
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -20,7 +27,6 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
-
 api.interceptors.response.use(
   (response) => response,
 

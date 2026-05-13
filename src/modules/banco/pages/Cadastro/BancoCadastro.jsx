@@ -100,7 +100,7 @@ export default function BancoCadastro() {
 
         setSucesso("Conta bancária criada com sucesso!");
         setTimeout(() => {
-          navigate(ROUTES.BANK_DASHBOARD);
+          navigate(ROUTES.CONFIRMACAO);
         }, 1200);
       } else {
         setErro(resultado.data?.error || "Não foi possível criar a conta.");
