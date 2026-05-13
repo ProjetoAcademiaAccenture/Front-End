@@ -74,6 +74,10 @@ export const LojaProvider = ({ children }) => {
     });
   }, []);
 
+  const esvazearCarrinho = useCallback(() => {
+    setCarrinho([]);
+  }, []);
+
   const calcularTotal = useCallback(() => {
     return carrinho.reduce(
       (total, item) => total + item.preco * item.quantidade,
@@ -81,9 +85,6 @@ export const LojaProvider = ({ children }) => {
     );
   }, [carrinho]);
 
-  const finalizarPedido = useCallback((pedidoId) => {
-    setCarrinho([]);
-  }, []);
 
   const contextValue = useMemo(
     () => ({
@@ -99,7 +100,7 @@ export const LojaProvider = ({ children }) => {
       removerDoCarrinho,
       atualizarQuantidadeCarrinho,
       calcularTotal,
-      finalizarPedido,
+      esvazearCarrinho,
     }),
     [
       produtos,
@@ -110,7 +111,7 @@ export const LojaProvider = ({ children }) => {
       removerDoCarrinho,
       atualizarQuantidadeCarrinho,
       calcularTotal,
-      finalizarPedido,
+      esvazearCarrinho,
     ],
   );
   return (

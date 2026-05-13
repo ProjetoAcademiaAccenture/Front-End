@@ -6,10 +6,11 @@ export const ROLES = {
 export const ROUTES = {
   LOGIN_SHOP: "loja/login",
   REGISTER: "loja/signup",
-  PRODUCTS: "loja/productos",
+  PRODUCTS: "loja/produtos",
+  ORDERS: "loja/pedidos",
   CART: "loja/carrinho",
   ADMIN: "loja/admin",
-  ADMIN_PRODUCTS: "loja/admin/productos",
+  ADMIN_PRODUCTS: "loja/admin/produtos",
   PAYMENT_PIX: "loja/checkout/pix",
   PAYMENT_BOLETO: "loja/checkout/boleto",
   PAYMENT_CARD: "loja/checkout/cartao",
@@ -25,7 +26,8 @@ export const STORAGE_KEYS = {
 };
 
 export const PAYMENT_METHODS = {
-  PIX: "pix",
-  BOLETO: "boleto",
-  CARD: "cartao",
+  PIX: "PIX",
+  BOLETO: "BOLETO",
+  CREDITO: "CREDITO",
+  DEBITO: "DEBITO",
 };
