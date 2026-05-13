@@ -1,23 +1,51 @@
-import { createContext, useState, useCallback, useEffect, useMemo } from "react";
+import {
+  createContext,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
+import { useModuleAuth } from "../auth/hooks/useModuleAuth";
 import PropTypes from "prop-types";
 
 export const LojaContext = createContext();
 
-const CARRINHO_KEY = "loja_carrinho";
-
 export const LojaProvider = ({ children }) => {
+  const { user } = useModuleAuth("loja");
+
+  const userId = user?.clienteId;
+
+  const getCarrinhoKey = useCallback(() => {
+    return userId ? `loja_carrinho_user_${userId}` : null;
+  }, [userId]);
+
   const [produtos, setProdutos] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [faturamento, setFaturamento] = useState(0);
-
-  const [carrinho, setCarrinho] = useState(() => {
-    const salvo = localStorage.getItem(CARRINHO_KEY);
-    return salvo ? JSON.parse(salvo) : [];
-  });
+  const [carrinho, setCarrinho] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem(CARRINHO_KEY, JSON.stringify(carrinho));
-  }, [carrinho]);
+    const key = getCarrinhoKey();
+    if (key) {
+      const salvo = localStorage.getItem(key);
+      setCarrinho(salvo ? JSON.parse(salvo) : []);
+    } else {
+      setCarrinho([]);
+    }
+  }, [userId, getCarrinhoKey]);
+
+  useEffect(() => {
+    const key = getCarrinhoKey();
+    if (key && carrinho.length >= 0) {
+      localStorage.setItem(key, JSON.stringify(carrinho));
+    }
+  }, [carrinho, getCarrinhoKey]);
+
+  useEffect(() => {
+    if (!userId) {
+      setCarrinho([]);
+    }
+  }, [userId]);
 
   const adicionarAoCarrinho = useCallback((produto, quantidade) => {
     setCarrinho((prev) => {
@@ -53,15 +81,9 @@ export const LojaProvider = ({ children }) => {
     );
   }, [carrinho]);
 
-  const finalizarPedido = useCallback(() => {
-    const total = calcularTotal();
-    setFaturamento((prev) => prev + total);
-    setPedidos((prev) => [
-      ...prev,
-      { id: Date.now(), itens: carrinho, total },
-    ]);
+  const finalizarPedido = useCallback((pedidoId) => {
     setCarrinho([]);
-  }, [carrinho, calcularTotal]);
+  }, []);
 
   const contextValue = useMemo(
     () => ({
@@ -91,11 +113,8 @@ export const LojaProvider = ({ children }) => {
       finalizarPedido,
     ],
   );
-
   return (
-    <LojaContext.Provider value={contextValue}>
-      {children}
-    </LojaContext.Provider>
+    <LojaContext.Provider value={contextValue}>{children}</LojaContext.Provider>
   );
 };
 
