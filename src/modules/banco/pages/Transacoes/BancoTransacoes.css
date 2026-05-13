@@ -52,3 +52,157 @@
     grid-template-columns: 1fr;
   }
 }
+.transacoes-abas {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.aba-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: 2px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+  transition: all 0.2s;
+}
+
+.aba-btn:hover {
+  border-color: var(--primary, #3b82f6);
+  color: var(--primary, #3b82f6);
+}
+
+.aba-btn.ativa {
+  background: var(--primary, #3b82f6);
+  border-color: var(--primary, #3b82f6);
+  color: white;
+}
+
+.operacao-card {
+  background: var(--card-bg, #fff);
+  border-radius: 12px;
+  padding: 28px;
+  border: 1px solid var(--border, #e2e8f0);
+  max-width: 600px;
+}
+
+.operacao-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  font-size: 18px;
+}
+
+.operacao-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.operacao-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.operacao-form label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary, #64748b);
+}
+
+.operacao-form input {
+  padding: 10px 14px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.operacao-form input:focus {
+  border-color: var(--primary, #3b82f6);
+}
+
+.boleto-card {
+  background: var(--bg-secondary, #f8fafc);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0;
+  border: 1px solid var(--border, #e2e8f0);
+}
+
+.boleto-card h3 {
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.boleto-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  gap: 12px;
+}
+
+.boleto-row:last-child {
+  border-bottom: none;
+}
+
+.boleto-row .label {
+  font-size: 13px;
+  color: var(--text-secondary, #64748b);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.boleto-row .value {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.codigo-barras {
+  font-family: monospace;
+  font-size: 12px !important;
+  word-break: break-all;
+}
+
+.valor-destaque {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--primary, #3b82f6);
+}
+
+.status-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px !important;
+}
+
+.status-badge.credito  { background: #dcfce7; color: #16a34a; }
+.status-badge.debito   { background: #fee2e2; color: #dc2626; }
+.status-badge.pendente { background: #fef9c3; color: #ca8a04; }
+
+.boleto-acoes {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

@@ -27,4 +27,19 @@ export const bancoAPI = {
     });
     return response.data;
   },
+
+  getBoleto: async (boletoId) => {
+    const response = await api.get(`/api/boletos/${boletoId}`);
+    return response.data;
+  },
+
+  pagarBoleto: async (boletoId) => {
+    const response = await api.patch(`/api/boletos/${boletoId}/pagar`);
+    return response.data;
+  },
+
+  transferir: async (contaId, dados) => {
+    const response = await api.post(`/api/contas/${contaId}/transferir`, dados);
+    return response.data;
+  },
 };
