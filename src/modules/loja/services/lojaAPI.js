@@ -25,4 +25,14 @@ export const lojaAPI = {
     const response = await lojaApi.post("/api/pedidos", pedido);
     return response;
   },
+
+  getPedidos: async (clienteId) => {
+    const response = await lojaApi.get(`/api/pedidos/cliente/${clienteId}`);
+    return response.data;
+  },
+
+  cancelarPedido: async (pedidoId) => {
+    const response = await lojaApi.patch(`/api/pedidos/${pedidoId}/cancelar`);
+    return response;
+  },
 };
