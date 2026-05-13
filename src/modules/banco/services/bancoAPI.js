@@ -1,13 +1,13 @@
-import api from "../../../services/api";
+import { bancoApi } from "../../../services/api";
 
 export const bancoAPI = {
   login: async (credentials) => {
-    const response = await api.post("/auth/login-bank", credentials);
+    const response = await bancoApi.post("/auth/login-bank", credentials);
     return response.data;
   },
 
   signup: async (newAccountData) => {
-    const response = await api.post("/auth/register-bank", newAccountData);
+    const response = await bancoApi.post("/auth/register-bank", newAccountData);
     return response;
   },
 

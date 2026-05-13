@@ -8,19 +8,6 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
 api.interceptors.response.use(
   (response) => response,
 
@@ -41,5 +28,26 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+const createInstance = (moduleName) => {
+  const instance = axios.create({
+    baseURL: "http://localhost:8080",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  instance.interceptors.request.use((config) => {
+    const token = localStorage.getItem(`${moduleName}_token`);
+    console.log(`Token adicionado para ${moduleName}:`, token);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
+
+  return instance;
+};
+
+export const lojaApi = createInstance("loja");
+export const bancoApi = createInstance("banco");
 
 export default api;
