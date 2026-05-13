@@ -1,23 +1,40 @@
-import React, { useState } from 'react';
-import { useLojaContext } from '../../hooks/useLojaContext';
-import ProductCard from '../../components/ProductCard/ProductCard';
-import './LojaProdutos.css';
+import { useState, useEffect } from "react";
+import ProductCard from "../../components/ProductCard/ProductCard";
+import { useLojaContext } from "../../hooks/useLojaContext";
+
+import api from "../../../../services/api";
+import "./LojaProdutos.css";
 
 export default function LojaProdutos() {
-  const { produtos, adicionarAoCarrinho } = useLojaContext();
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todos');
-  const [notificacao, setNotificacao] = useState('');
+  const { adicionarAoCarrinho } = useLojaContext();
 
-  const categorias = ['Todos', ...new Set(produtos.map((p) => p.categoria))];
+  const [produtos, setProdutos] = useState([]);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState("TODOS");
+  const [notificacao, setNotificacao] = useState("");
 
-  const produtosFiltrados = categoriaSelecionada === 'Todos'
-    ? produtos
-    : produtos.filter((p) => p.categoria === categoriaSelecionada);
+  const categorias = ["TODOS", ...new Set(produtos.map((p) => p.categoria))];
+  const produtosFiltrados =
+    categoriaSelecionada === "TODOS"
+      ? produtos
+      : produtos.filter((p) => p.categoria === categoriaSelecionada);
+
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const response = await api.get("api/produtos");
+        setProdutos(response.data);
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      }
+    };
+
+    fetchProdutos();
+  }, []);
 
   const handleAddToCart = (produto, quantidade) => {
     adicionarAoCarrinho(produto, quantidade);
     setNotificacao(`${produto.nome} adicionado ao carrinho!`);
-    setTimeout(() => setNotificacao(''), 2000);
+    setTimeout(() => setNotificacao(""), 2000);
   };
 
   return (
@@ -27,18 +44,14 @@ export default function LojaProdutos() {
         <p className="page-subtitle">Explore nosso catálogo de produtos</p>
       </div>
 
-      {notificacao && (
-        <div className="notification">
-          ✓ {notificacao}
-        </div>
-      )}
+      {notificacao && <div className="notification">✓ {notificacao}</div>}
 
       <div className="filtros-container">
         <div className="filtros">
           {categorias.map((categoria) => (
             <button
               key={categoria}
-              className={`filtro-btn ${categoriaSelecionada === categoria ? 'active' : ''}`}
+              className={`filtro-btn ${categoriaSelecionada === categoria ? "active" : ""}`}
               onClick={() => setCategoriaSelecionada(categoria)}
             >
               {categoria}
@@ -47,7 +60,8 @@ export default function LojaProdutos() {
         </div>
 
         <div className="resultado-filtro">
-          {produtosFiltrados.length} produto{produtosFiltrados.length !== 1 ? 's' : ''}
+          {produtosFiltrados.length} produto
+          {produtosFiltrados.length === 1 ? "" : "s"}
         </div>
       </div>
 

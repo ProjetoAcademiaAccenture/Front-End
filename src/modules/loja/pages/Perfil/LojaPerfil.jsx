@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../../auth/context/AuthContext';
 import { MapPinHouse,NotebookTabs,User,Users,UserStar,LogOut,Trash } from 'lucide-react';
+import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
 
 import './LojaPerfil.css';
 
 export default function LojaPerfil() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useModuleAuth("loja");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -63,30 +62,6 @@ export default function LojaPerfil() {
 
           <button className="btn-action"> <MapPinHouse size={16} /> Adicionar/Editar Endereço</button>
           <button className="btn-action"><NotebookTabs size={16} /> Meus Endereços</button>
-        </div>
-
-        <div className="perfil-card">
-          <h2>Preferências</h2>
-
-          <label className="checkbox-item">
-            <input type="checkbox" defaultChecked />
-            <span>Receber notificações de promoções</span>
-          </label>
-
-          <label className="checkbox-item">
-            <input type="checkbox" defaultChecked />
-            <span>Receber avisos de pedidos</span>
-          </label>
-
-          <label className="checkbox-item">
-            <input type="checkbox" />
-            <span>Newsletter semanal</span>
-          </label>
-
-          <label className="checkbox-item">
-            <input type="checkbox" defaultChecked />
-            <span>Comunicações por email</span>
-          </label>
         </div>
 
         {user?.tipo === 'admin' && (

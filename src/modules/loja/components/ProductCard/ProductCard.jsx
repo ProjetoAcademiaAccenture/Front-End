@@ -1,6 +1,8 @@
 import React from 'react';
-import './ProductCard.css';
+import PropTypes from 'prop-types';
 import {ShoppingCart } from 'lucide-react';
+
+import './ProductCard.css';
 
 export default function ProductCard({ produto, onAddToCart }) {
   const [quantidade, setQuantidade] = React.useState(1);
@@ -13,11 +15,13 @@ export default function ProductCard({ produto, onAddToCart }) {
   return (
     <div className="product-card">
       <div className="product-image">
-        <div className="image-placeholder">📦</div>
-        {produto.estoque <= 5 && produto.estoque > 0 && (
+        <div className="image-placeholder">
+          <img src={produto.urlImagem} alt={produto.nome}/>
+        </div>
+        {produto.quantidadeEstoque <= 5 && produto.quantidadeEstoque > 0 && (
           <span className="estoque-badge">Pouco estoque</span>
         )}
-        {produto.estoque === 0 && (
+        {produto.quantidadeEstoque === 0 && (
           <span className="fora-estoque">Fora de estoque</span>
         )}
       </div>
@@ -25,31 +29,32 @@ export default function ProductCard({ produto, onAddToCart }) {
       <div className="product-info">
         <h3 className="product-name">{produto.nome}</h3>
         <p className="product-category">{produto.categoria}</p>
-        <p className="product-sku">SKU: {produto.sku}</p>
 
         <div className="product-stats">
           <span className="product-price">
-            R$ {produto.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            R${" "}
+            {produto.preco.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}
           </span>
           <span className="product-stock">
-            {produto.estoque} em estoque
+            {produto.quantidadeEstoque} em estoque
           </span>
         </div>
 
-        {produto.estoque > 0 ? (
+        {produto.quantidadeEstoque > 0 ? (
           <div className="product-actions">
             <input
               type="number"
               min="1"
-              max={produto.estoque}
+              max={produto.quantidadeEstoque}
               value={quantidade}
-              onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={(e) =>
+                setQuantidade(Math.max(1, Number.parseInt(e.target.value) || 1))
+              }
               className="quantidade-input"
             />
-            <button
-              className="btn-add-cart"
-              onClick={handleAdd}
-            >
+            <button className="btn-add-cart" onClick={handleAdd}>
               <ShoppingCart /> Adicionar
             </button>
           </div>
@@ -62,3 +67,14 @@ export default function ProductCard({ produto, onAddToCart }) {
     </div>
   );
 }
+
+ProductCard.propTypes = {
+  produto: PropTypes.shape({
+    nome: PropTypes.string.isRequired,
+    urlImagem: PropTypes.string.isRequired,
+    quantidadeEstoque: PropTypes.number.isRequired,
+    categoria: PropTypes.string.isRequired,
+    preco: PropTypes.number.isRequired,
+  }).isRequired,
+  onAddToCart: PropTypes.func.isRequired,
+};

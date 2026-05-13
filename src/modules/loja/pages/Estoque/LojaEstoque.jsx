@@ -37,6 +37,34 @@ export default function LojaEstoque() {
   );
   const produtosFora = produtos.filter((p) => p.estoque === 0);
 
+  const getStatusClass = (estoque) => {
+    if (estoque === 0) return 'fora';
+    if (estoque <= 5) return 'baixo';
+    return 'ok';
+  };
+
+  const getStatusDisplay = (estoque) => {
+    if (estoque === 0) {
+      return (
+        <span className="status-fora">
+          <XCircle size={14} /> Fora
+        </span>
+      );
+    }
+    if (estoque <= 5) {
+      return (
+        <span className="status-baixo">
+          <AlertTriangle size={14} /> Baixo
+        </span>
+      );
+    }
+    return (
+      <span className="status-ok">
+        <CheckCircle size={14} /> OK
+      </span>
+    );
+  };
+
   return (
     <div className="loja-page">
 
@@ -85,7 +113,6 @@ export default function LojaEstoque() {
         <table>
           <thead>
             <tr>
-              <th>SKU</th>
               <th>Produto</th>
               <th>Categoria</th>
               <th>Preço</th>
@@ -99,15 +126,8 @@ export default function LojaEstoque() {
             {produtos.map((produto) => (
               <tr
                 key={produto.id}
-                className={`status-${
-                  produto.estoque === 0
-                    ? 'fora'
-                    : produto.estoque <= 5
-                    ? 'baixo'
-                    : 'ok'
-                }`}
+                className={`status-${getStatusClass(produto.estoque)}`}
               >
-                <td className="sku">{produto.sku}</td>
                 <td>{produto.nome}</td>
                 <td>{produto.categoria}</td>
                 <td>
@@ -131,19 +151,7 @@ export default function LojaEstoque() {
                 </td>
 
                 <td>
-                  {produto.estoque === 0 ? (
-                    <span className="status-fora">
-                      <XCircle size={14} /> Fora
-                    </span>
-                  ) : produto.estoque <= 5 ? (
-                    <span className="status-baixo">
-                      <AlertTriangle size={14} /> Baixo
-                    </span>
-                  ) : (
-                    <span className="status-ok">
-                      <CheckCircle size={14} /> OK
-                    </span>
-                  )}
+                  {getStatusDisplay(produto.estoque)}
                 </td>
 
                 <td>

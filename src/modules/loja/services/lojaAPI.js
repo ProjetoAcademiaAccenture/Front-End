@@ -12,11 +12,13 @@ export const lojaAPI = {
   },
 
   getProdutos: async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, produtos: [] });
-      }, 300);
-    });
+    const response = await api.get("api/produtos");
+    return response.data;
+  },
+
+  getProdutoByCategoria: async (categoria) => {
+    const response = await api.get(`api/produtos/categoria/${categoria}`);
+    return response.data;
   },
 
   processarPagamento: async (valor) => {

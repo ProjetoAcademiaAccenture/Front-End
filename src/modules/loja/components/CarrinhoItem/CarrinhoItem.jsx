@@ -1,6 +1,6 @@
-import React from 'react';
 import './CarrinhoItem.css';
 import { Trash } from 'lucide-react';
+import PropTypes from 'prop-types';
 
 export default function CarrinhoItem({ item, onQuantidadeChange, onRemove }) {
   return (
@@ -10,7 +10,6 @@ export default function CarrinhoItem({ item, onQuantidadeChange, onRemove }) {
       <div className="item-info">
         <h3>{item.nome}</h3>
         <p className="item-category">{item.categoria}</p>
-        <p className="item-sku">SKU: {item.sku}</p>
       </div>
 
       <div className="item-price">
@@ -47,3 +46,15 @@ export default function CarrinhoItem({ item, onQuantidadeChange, onRemove }) {
     </div>
   );
 }
+
+CarrinhoItem.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    nome: PropTypes.string.isRequired,
+    categoria: PropTypes.string.isRequired,
+    preco: PropTypes.number.isRequired,
+    quantidade: PropTypes.number.isRequired,
+  }).isRequired,
+  onQuantidadeChange: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+};

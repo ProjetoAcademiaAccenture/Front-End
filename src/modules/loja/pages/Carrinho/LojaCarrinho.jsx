@@ -1,12 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLojaContext } from '../../hooks/useLojaContext';
-import CarrinhoItem from '../../components/CarrinhoItem/CarrinhoItem';
-import './LojaCarrinho.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useLojaContext } from "../../hooks/useLojaContext";
+import CarrinhoItem from "../../components/CarrinhoItem/CarrinhoItem";
+import "./LojaCarrinho.css";
 
 export default function LojaCarrinho() {
   const navigate = useNavigate();
-  const { carrinho, removerDoCarrinho, atualizarQuantidadeCarrinho, calcularTotal } = useLojaContext();
+  const {
+    carrinho,
+    removerDoCarrinho,
+    atualizarQuantidadeCarrinho,
+    calcularTotal,
+  } = useLojaContext();
 
   const total = calcularTotal();
   const desconto = total > 1000 ? total * 0.1 : 0;
@@ -16,7 +21,9 @@ export default function LojaCarrinho() {
     <div className="loja-page">
       <div className="page-header">
         <h1>🛒 Carrinho de Compras</h1>
-        <p className="page-subtitle">{carrinho.length} item{carrinho.length !== 1 ? 's' : ''} no carrinho</p>
+        <p className="page-subtitle">
+          {carrinho.length} item{carrinho.length === 1 ? "" : "s"} no carrinho
+        </p>
       </div>
 
       <div className="carrinho-container">
@@ -26,7 +33,7 @@ export default function LojaCarrinho() {
               <p>😕 Seu carrinho está vazio</p>
               <button
                 className="btn-continuar-comprando"
-                onClick={() => navigate('/loja/produtos')}
+                onClick={() => navigate("/loja/produtos")}
               >
                 Continuar Comprando
               </button>
@@ -52,7 +59,7 @@ export default function LojaCarrinho() {
             <div className="resumo-item">
               <span>Subtotal:</span>
               <span>
-                R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </span>
             </div>
 
@@ -61,7 +68,10 @@ export default function LojaCarrinho() {
                 <div className="resumo-item desconto">
                   <span>Desconto (10%):</span>
                   <span>
-                    -R$ {desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    -R${" "}
+                    {desconto.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
                 <div className="info-desconto">
@@ -80,20 +90,23 @@ export default function LojaCarrinho() {
             <div className="resumo-total">
               <span>Total:</span>
               <span>
-                R$ {totalComDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R${" "}
+                {totalComDesconto.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
               </span>
             </div>
 
             <button
               className="btn-finalizar"
-              onClick={() => navigate('/loja/pagamento')}
+              onClick={() => navigate("/loja/pagamento")}
             >
               💳 Finalizar Compra
             </button>
 
             <button
               className="btn-continuar"
-              onClick={() => navigate('/loja/produtos')}
+              onClick={() => navigate("/loja/produtos")}
             >
               Continuar Comprando
             </button>
