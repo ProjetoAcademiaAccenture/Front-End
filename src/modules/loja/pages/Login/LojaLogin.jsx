@@ -28,10 +28,11 @@ export default function LojaLogin() {
         const userData = {
           clienteId: resultado.clienteId,
           nome: resultado.nome,
+          email: resultado.email,
           tipoCliente: resultado.tipoCliente,
         };
 
-        login("loja", userData, resultado.token);
+        login(userData, resultado.token);
         navigate(ROUTES.PRODUCTS);
       } else {
         setErro("Credenciais inválidas.");

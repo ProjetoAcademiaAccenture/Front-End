@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
   const [activeModule, setActiveModule] = useState("loja");
 
   const login = useCallback((module, userData, token) => {
+    console.log("Login:", { module, userData, token });
     const moduleData = {
       user: userData,
       token,
