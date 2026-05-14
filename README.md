@@ -130,7 +130,7 @@ Ao acessar a aplicação, você verá a página inicial com dois módulos:
 
 ### Loja Online
 1. Clique em "Loja Online"
-2. Crie uma conta (use "admin@email.com" para acesso administrativo)
+2. Crie uma conta (use "empresa@loja.com" para acesso administrativo)
 3. Navegue pelo catálogo em "Produtos"
 4. Adicione itens ao carrinho
 5. Finalize a compra em "Pagamento"

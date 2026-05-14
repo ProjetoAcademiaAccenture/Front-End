@@ -50,7 +50,7 @@ O navegador abrirá automaticamente em `http://localhost:3000`
 ### Na Loja
 - Email: qualquer email (ex: user@email.com)
 - Senha: qualquer senha
-- Para acesso admin, use email com "admin" (ex: admin@email.com)
+- Para acesso admin, use email com "admin" (ex: empresa@loja.com)
 
 ## Dicas
 

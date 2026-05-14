@@ -90,7 +90,7 @@ export default function LojaLogin() {
           </div>
 
           <div className="demo-info">
-            <p>💡 Demo: Use qualquer email e senha (admin@email.com para acesso total)</p>
+            <p>💡 Demo: Use empresa@loja.com para acesso como admin.</p>
           </div>
         </div>
       </div>

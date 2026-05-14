@@ -150,7 +150,7 @@
 
 ### Cenário 3: Admin
 ```
-1. Loja → Login com admin@email.com
+1. Loja → Login com empresa@loja.com
 2. Admin → Ver faturamento
 3. Estoque → Ajustar quantidades
 4. Perfil → Acesso às ferramentas
@@ -244,7 +244,7 @@ Pedidos (exibe confirmação)
 
 ### Não vejo o admin
 - Email deve conter "admin"
-- Tente: `admin@email.com` ou `adminstrador@mail.com`
+- Tente: `empresa@loja.com` ou `adminstrador@mail.com`
 
 ### Falta saldo no banco
 - Faça um depósito na tela "Depósito"
