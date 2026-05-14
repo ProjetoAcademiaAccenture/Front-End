@@ -1,15 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../auth/context/AuthContext";
 import { lojaAPI } from "../../services/lojaAPI";
-import { BancoContext } from "../../../banco/context/BancoContext";
 import PagamentoPix from "../../components/PagamentoPix/PagamentoPix";
 import PagamentoBoleto from "../../components/PagamentoBoleto/PagamentoBoleto";
 import PagamentoCartao from "../../components/PagamentoCartao/PagamentoCartao";
+
+import "./LojaPagamento.css";
 import { ROUTES } from "../../../../constants";
 
 export default function LojaPagamento() {
   const { pedidoId } = useParams();
   const navigate = useNavigate();
+  const { pagamentoConcluido, limparSinalizadorPagamento } =
+    useContext(AuthContext);
+
   const [pedido, setPedido] = useState(null);
   const [metodoSelecionado, setMetodoSelecionado] = useState(null);
   const [processando, setProcessando] = useState(false);
@@ -29,28 +34,26 @@ export default function LojaPagamento() {
     carregarPedido();
   }, [pedidoId]);
 
+  useEffect(() => {
+    if (
+      pedido &&
+      pagamentoConcluido?.id === pedido.pagamento.id &&
+      pagamentoConcluido?.status === "APROVADO"
+    ) {
+      setMensagem("Pagamento confirmado com sucesso via Banco!");
+
+      limparSinalizadorPagamento();
+
+      setTimeout(() => {
+        navigate(ROUTES.ORDERS);
+      }, 5000);
+    }
+  }, [pagamentoConcluido, pedido, navigate, limparSinalizadorPagamento]);
+
   const handleFinalizar = async (dadosFilho) => {
     setProcessando(true);
     try {
-      const payload = {
-        pagamentoId: pedido.pagamento.id,
-        metodoPagamento: metodoSelecionado,
-        senhaTransacao: dadosFilho.senhaTransacao,
-      };
-
-      console.log("Payload enviado para processamento:", payload);
-      const response = await lojaAPI.processarPagamento(payload);
-      console.log("Resposta do processamento:", response);
-      if (response.status === "RECUSADO") {
-        setMensagem("Pagamento recusado.");
-      } else if (response.status === "APROVADO") {
-        setMensagem("Pagamento realizado com sucesso!");
-        navigate(ROUTES.PRODUCTS);
-      } else if (metodoSelecionado === "BOLETO") {
-        setMensagem("Boleto gerado com sucesso!");
-        const atualizado = await lojaAPI.getPedidoPorId(pedidoId);
-        setPedido(atualizado);
-      }
+      // TODO: lógica de pagamento por cartão.
     } catch (error) {
       setMensagem(error.response?.data?.message || "Erro na transação.");
     } finally {
@@ -103,20 +106,10 @@ export default function LojaPagamento() {
         </aside>
 
         <main className="metodo-detalhe">
-          {metodoSelecionado === "PIX" && (
-            <PagamentoPix
-              pedido={pedido}
-              aoFinalizar={handleFinalizar}
-              processando={processando}
-            />
-          )}
+          {metodoSelecionado === "PIX" && <PagamentoPix pedido={pedido} />}
 
           {metodoSelecionado === "BOLETO" && (
-            <PagamentoBoleto
-              pedido={pedido}
-              aoFinalizar={handleFinalizar}
-              processando={processando}
-            />
+            <PagamentoBoleto pedido={pedido} />
           )}
 
           {["CREDITO", "DEBITO"].includes(metodoSelecionado) && (

@@ -21,6 +21,10 @@ export const AuthProvider = ({ children }) => {
   });
 
   const [activeModule, setActiveModule] = useState("loja");
+  const [pagamentoConcluido, setPagamentoConcluido] = useState({
+    id: null,
+    status: null,
+  });
 
   const login = useCallback((module, userData, token) => {
     console.log("Login:", { module, userData, token });
@@ -70,16 +74,39 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem(`${module}_token`, token);
   }, []);
 
+  const confirmarPagamentoGlobal = useCallback((id, status) => {
+    setPagamentoConcluido({ id, status });
+  }, []);
+
+  const limparSinalizadorPagamento = useCallback(() => {
+    setPagamentoConcluido({ id: null, status: null });
+  }, []);
+
   const value = useMemo(
     () => ({
       auth,
       activeModule,
+      pagamentoConcluido,
+      setActiveModule,
+      setPagamentoConcluido,
+      login,
+      logout,
+      signup,
+      confirmarPagamentoGlobal,
+      limparSinalizadorPagamento,
+    }),
+    [
+      auth,
+      activeModule,
+      pagamentoConcluido,
+      setPagamentoConcluido,
       setActiveModule,
       login,
       logout,
       signup,
-    }),
-    [auth, activeModule, setActiveModule, login, logout, signup],
+      confirmarPagamentoGlobal,
+      limparSinalizadorPagamento,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

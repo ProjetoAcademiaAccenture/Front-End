@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useBanco } from '../../hooks/useBanco';
-import { bancoAPI } from '../../services/bancoAPI';
-import Extrato from '../../components/Extrato/Extrato';
-import './BancoTransacoes.css';
+import { useContext, useState } from "react";
+import { useBanco } from "../../hooks/useBanco";
+import { bancoAPI } from "../../services/bancoAPI";
+import Extrato from "../../components/Extrato/Extrato";
+import { AuthContext } from "../../../../auth/context/AuthContext";
 
 import {
   List,
@@ -14,43 +14,96 @@ import {
   CheckCircle,
   AlertCircle,
   Loader2,
-} from 'lucide-react';
+  QrCode,
+} from "lucide-react";
+
+import "./BancoTransacoes.css";
+import { PiX } from "react-icons/pi";
 
 export default function BancoTransacoes() {
   const { transacoes, carregarDados } = useBanco();
-  const [aba, setAba] = useState('historico'); // 'historico' | 'boleto' | 'transferencia'
+  const { pagamentoConcluido, confirmarPagamentoGlobal } =
+    useContext(AuthContext);
+
+  const [aba, setAba] = useState("historico"); // 'historico' | 'pix' | 'boleto' | 'transferencia'
+  const [senhaTransacao, setSenhaTransacao] = useState("");
+
+  // --- Pix ---
+  const [pix, setPix] = useState("");
+  const [pixErro, setPixErro] = useState("");
+  const [pixLoading, setPixLoading] = useState(false);
+  const [pixSucesso, setPixSucesso] = useState(false);
 
   // --- Boleto ---
-  const [boletoId, setBoletoId] = useState('');
+  const [boletoId, setBoletoId] = useState("");
   const [boletoDados, setBoletoDados] = useState(null);
-  const [boletoErro, setBoletoErro] = useState('');
+  const [boletoErro, setBoletoErro] = useState("");
   const [boletoLoading, setBoletoLoading] = useState(false);
   const [boletoPago, setBoletoPago] = useState(false);
 
   // --- Transferência ---
-  const [transContaDestino, setTransContaDestino] = useState('');
-  const [transValor, setTransValor] = useState('');
-  const [transDescricao, setTransDescricao] = useState('');
-  const [transErro, setTransErro] = useState('');
+  const [transContaDestino, setTransContaDestino] = useState("");
+  const [transValor, setTransValor] = useState("");
+  const [transDescricao, setTransDescricao] = useState("");
+  const [transErro, setTransErro] = useState("");
   const [transLoading, setTransLoading] = useState(false);
   const [transSucesso, setTransSucesso] = useState(false);
 
   const transacoesCreditadas = transacoes.filter(
-    (t) => t.tipo === 'CREDITO' || t.tipo === 'ESTORNO'
+    (t) => t.tipo === "CREDITO" || t.tipo === "ESTORNO",
   );
   const transacoesDebito = transacoes.filter(
-    (t) => t.tipo === 'DEBITO' || t.tipo === 'MULTA'
+    (t) => t.tipo === "DEBITO" || t.tipo === "MULTA",
   );
+
+  // --- Handlers Pix ---
+  const handlePagarPix = async (e) => {
+    e.preventDefault();
+    setPixErro("");
+    setPixSucesso(false);
+    if (!pix.trim()) {
+      setPixErro("Informe o código Pix.");
+      return;
+    }
+    if (!pagamentoConcluido?.id) {
+      setPixErro(
+        "Nenhum pagamento pendente encontrado. Inicie um pagamento na loja.",
+      );
+      return;
+    }
+    if (!senhaTransacao.trim()) {
+      setPixErro("Informe a senha da transação.");
+      return;
+    }
+
+    const payload = {
+      pagamentoId: pagamentoConcluido.id,
+      metodoPagamento: "PIX",
+      senhaTransacao: senhaTransacao,
+    };
+    setPixLoading(true);
+    try {
+      const resposne = await bancoAPI.processarPagamento(payload);
+      console.log("Resposta do pagamento Pix:", resposne);
+      setPixSucesso(true);
+      confirmarPagamentoGlobal(pagamentoConcluido.id, "APROVADO");
+      await carregarDados();
+    } catch (error) {
+      setPixErro("Erro ao processar pagamento Pix.");
+    } finally {
+      setPixLoading(false);
+    }
+  };
 
   // --- Handlers Boleto ---
   const handleBuscarBoleto = async (e) => {
     e.preventDefault();
-    setBoletoErro('');
+    setBoletoErro("");
     setBoletoDados(null);
     setBoletoPago(false);
 
     if (!boletoId.trim()) {
-      setBoletoErro('Informe o código do boleto.');
+      setBoletoErro("Informe o código do boleto.");
       return;
     }
 
@@ -59,7 +112,7 @@ export default function BancoTransacoes() {
       const boleto = await bancoAPI.getBoleto(boletoId.trim());
       setBoletoDados(boleto);
     } catch (err) {
-      setBoletoErro('Boleto não encontrado. Verifique o código.');
+      setBoletoErro("Boleto não encontrado. Verifique o código.");
     } finally {
       setBoletoLoading(false);
     }
@@ -67,134 +120,215 @@ export default function BancoTransacoes() {
 
   const handlePagarBoleto = async () => {
     setBoletoLoading(true);
-    setBoletoErro('');
+    setBoletoErro("");
     try {
       await bancoAPI.pagarBoleto(boletoDados.id);
       setBoletoPago(true);
-      setBoletoDados((prev) => ({ ...prev, status: 'PAGO' }));
+      setBoletoDados((prev) => ({ ...prev, status: "PAGO" }));
       await carregarDados();
     } catch (err) {
-      setBoletoErro(err.response?.data?.message || 'Erro ao pagar boleto.');
+      setBoletoErro(err.response?.data?.message || "Erro ao pagar boleto.");
     } finally {
       setBoletoLoading(false);
     }
   };
 
   const handleNovaConsulta = () => {
-    setBoletoId('');
+    setBoletoId("");
     setBoletoDados(null);
-    setBoletoErro('');
+    setBoletoErro("");
     setBoletoPago(false);
   };
 
   // --- Handlers Transferência ---
   const handleTransferencia = async (e) => {
     e.preventDefault();
-    setTransErro('');
+    setTransErro("");
     setTransSucesso(false);
 
     if (!transContaDestino.trim() || !transValor) {
-      setTransErro('Preencha todos os campos obrigatórios.');
+      setTransErro("Preencha todos os campos obrigatórios.");
       return;
     }
 
     const valor = parseFloat(transValor);
     if (valor <= 0) {
-      setTransErro('Informe um valor válido.');
+      setTransErro("Informe um valor válido.");
       return;
     }
 
     setTransLoading(true);
     try {
-      const user = JSON.parse(localStorage.getItem('banco_user'));
+      const user = JSON.parse(localStorage.getItem("banco_user"));
       await bancoAPI.transferir(user.contaId, {
         contaDestino: transContaDestino.trim(),
         valor,
-        descricao: transDescricao || 'Transferência',
+        descricao: transDescricao || "Transferência",
       });
       setTransSucesso(true);
-      setTransContaDestino('');
-      setTransValor('');
-      setTransDescricao('');
+      setTransContaDestino("");
+      setTransValor("");
+      setTransDescricao("");
       await carregarDados();
       setTimeout(() => setTransSucesso(false), 3000);
     } catch (err) {
-      setTransErro(err.response?.data?.message || 'Erro ao realizar transferência.');
+      setTransErro(
+        err.response?.data?.message || "Erro ao realizar transferência.",
+      );
     } finally {
       setTransLoading(false);
     }
   };
 
   const statusColor = (status) => {
-    if (status === 'PAGO') return 'credito';
-    if (status === 'CANCELADO') return 'debito';
-    return 'pendente';
+    if (status === "PAGO") return "credito";
+    if (status === "CANCELADO") return "debito";
+    return "pendente";
   };
 
   return (
     <div className="banco-page">
       <div className="page-header">
-        <h1><List size={22} /> Transações</h1>
+        <h1>
+          <List size={22} /> Transações
+        </h1>
         <p className="page-subtitle">Histórico e operações</p>
       </div>
 
       {/* Abas */}
       <div className="transacoes-abas">
         <button
-          className={`aba-btn ${aba === 'historico' ? 'ativa' : ''}`}
-          onClick={() => setAba('historico')}
+          className={`aba-btn ${aba === "historico" ? "ativa" : ""}`}
+          onClick={() => setAba("historico")}
         >
           <Activity size={16} /> Histórico
         </button>
         <button
-          className={`aba-btn ${aba === 'boleto' ? 'ativa' : ''}`}
-          onClick={() => setAba('boleto')}
+          className={`aba-btn ${aba === "pix" ? "ativa" : ""}`}
+          onClick={() => setAba("pix")}
+        >
+          <QrCode size={16} /> Pagar Pix
+        </button>
+        <button
+          className={`aba-btn ${aba === "boleto" ? "ativa" : ""}`}
+          onClick={() => setAba("boleto")}
         >
           <FileText size={16} /> Pagar Boleto
         </button>
         <button
-          className={`aba-btn ${aba === 'transferencia' ? 'ativa' : ''}`}
-          onClick={() => setAba('transferencia')}
+          className={`aba-btn ${aba === "transferencia" ? "ativa" : ""}`}
+          onClick={() => setAba("transferencia")}
         >
           <ArrowRightLeft size={16} /> Transferência
         </button>
       </div>
 
       {/* Histórico */}
-      {aba === 'historico' && (
+      {aba === "historico" && (
         <div className="transacoes-container">
           <Extrato transacoes={transacoes} />
           <div className="transacoes-stats">
             <div className="stat-box">
-              <h3><TrendingUp size={18} /> Créditos</h3>
+              <h3>
+                <TrendingUp size={18} /> Créditos
+              </h3>
               <p className="valor credito">
-                +R$ {transacoesCreditadas
+                +R${" "}
+                {transacoesCreditadas
                   .reduce((sum, t) => sum + t.valor, 0)
-                  .toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </p>
-              <p className="quantidade">{transacoesCreditadas.length} transações</p>
+              <p className="quantidade">
+                {transacoesCreditadas.length} transações
+              </p>
             </div>
             <div className="stat-box">
-              <h3><TrendingDown size={18} /> Débitos</h3>
+              <h3>
+                <TrendingDown size={18} /> Débitos
+              </h3>
               <p className="valor debito">
-                -R$ {transacoesDebito
+                -R${" "}
+                {transacoesDebito
                   .reduce((sum, t) => sum + t.valor, 0)
-                  .toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  .toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </p>
               <p className="quantidade">{transacoesDebito.length} transações</p>
             </div>
             <div className="stat-box">
-              <h3><Activity size={18} /> Total</h3>
+              <h3>
+                <Activity size={18} /> Total
+              </h3>
               <p className="valor">{transacoes.length}</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* Boleto */}
-      {aba === 'boleto' && (
+      {/* Pix */}
+      {aba === "pix" && (
         <div className="operacao-card">
-          <h2><FileText size={18} /> Pagamento de Boleto</h2>
+          <h2>
+            <QrCode size={18} /> Pagamento via Pix
+          </h2>
+          {pixSucesso && (
+            <div className="success-alert">
+              <CheckCircle size={16} /> Pagamento Pix aprovado!
+            </div>
+          )}
+          {pixErro && (
+            <div className="error-alert">
+              <AlertCircle size={16} /> {pixErro}
+            </div>
+          )}
+
+          <form onSubmit={handlePagarPix} className="operacao-form">
+            <div className="form-group">
+              <label>Código Pix</label>
+              <input
+                type="text"
+                value={pix}
+                onChange={(e) => setPix(e.target.value)}
+                placeholder="Digite o código Pix"
+                disabled={pixLoading}
+              />
+            </div>
+            <div className="form-group">
+              <label>Senha de Transação</label>
+              <input
+                type="password"
+                value={senhaTransacao}
+                maxLength={4}
+                onChange={(e) => setSenhaTransacao(e.target.value)}
+                placeholder="Digite sua senha de transação"
+                disabled={pixLoading}
+              />
+            </div>
+            <button
+              type="submit"
+              onSubmit={(e) => handlePagarPix(e)}
+              className="btn-depositar"
+              disabled={
+                pixLoading && !pix?.length > 0 && !senhaTransacao.length > 0
+              }
+            >
+              {pixLoading ? (
+                <>
+                  <Loader2 size={16} className="spin" /> Processando...
+                </>
+              ) : (
+                "Pagar Pix"
+              )}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Boleto */}
+      {aba === "boleto" && (
+        <div className="operacao-card">
+          <h2>
+            <FileText size={18} /> Pagamento de Boleto
+          </h2>
 
           {!boletoDados ? (
             <form onSubmit={handleBuscarBoleto} className="operacao-form">
@@ -213,8 +347,18 @@ export default function BancoTransacoes() {
                   <AlertCircle size={16} /> {boletoErro}
                 </div>
               )}
-              <button type="submit" className="btn-depositar" disabled={boletoLoading}>
-                {boletoLoading ? <><Loader2 size={16} className="spin" /> Buscando...</> : 'Buscar Boleto'}
+              <button
+                type="submit"
+                className="btn-depositar"
+                disabled={boletoLoading}
+              >
+                {boletoLoading ? (
+                  <>
+                    <Loader2 size={16} className="spin" /> Buscando...
+                  </>
+                ) : (
+                  "Buscar Boleto"
+                )}
               </button>
             </form>
           ) : (
@@ -235,23 +379,32 @@ export default function BancoTransacoes() {
 
                 <div className="boleto-row">
                   <span className="label">Código:</span>
-                  <span className="value codigo-barras">{boletoDados.codigoBarras}</span>
+                  <span className="value codigo-barras">
+                    {boletoDados.codigoBarras}
+                  </span>
                 </div>
                 <div className="boleto-row">
                   <span className="label">Valor:</span>
                   <span className="value valor-destaque">
-                    R$ {parseFloat(boletoDados.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R${" "}
+                    {parseFloat(boletoDados.valor).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
                 <div className="boleto-row">
                   <span className="label">Vencimento:</span>
                   <span className="value">
-                    {new Date(boletoDados.dataVencimento).toLocaleDateString('pt-BR')}
+                    {new Date(boletoDados.dataVencimento).toLocaleDateString(
+                      "pt-BR",
+                    )}
                   </span>
                 </div>
                 <div className="boleto-row">
                   <span className="label">Status:</span>
-                  <span className={`value status-badge ${statusColor(boletoDados.status)}`}>
+                  <span
+                    className={`value status-badge ${statusColor(boletoDados.status)}`}
+                  >
                     {boletoDados.status}
                   </span>
                 </div>
@@ -262,16 +415,19 @@ export default function BancoTransacoes() {
               </div>
 
               <div className="boleto-acoes">
-                {boletoDados.status === 'PENDENTE' && !boletoPago && (
+                {boletoDados.status === "PENDENTE" && !boletoPago && (
                   <button
                     className="btn-depositar"
                     onClick={handlePagarBoleto}
                     disabled={boletoLoading}
                   >
-                    {boletoLoading
-                      ? <><Loader2 size={16} className="spin" /> Processando...</>
-                      : `Pagar R$ ${parseFloat(boletoDados.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                    }
+                    {boletoLoading ? (
+                      <>
+                        <Loader2 size={16} className="spin" /> Processando...
+                      </>
+                    ) : (
+                      `Pagar R$ ${parseFloat(boletoDados.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+                    )}
                   </button>
                 )}
                 <button className="btn-secondary" onClick={handleNovaConsulta}>
@@ -284,9 +440,11 @@ export default function BancoTransacoes() {
       )}
 
       {/* Transferência */}
-      {aba === 'transferencia' && (
+      {aba === "transferencia" && (
         <div className="operacao-card">
-          <h2><ArrowRightLeft size={18} /> Transferência</h2>
+          <h2>
+            <ArrowRightLeft size={18} /> Transferência
+          </h2>
 
           {transSucesso && (
             <div className="success-alert">
@@ -332,11 +490,18 @@ export default function BancoTransacoes() {
                 disabled={transLoading}
               />
             </div>
-            <button type="submit" className="btn-depositar" disabled={transLoading}>
-              {transLoading
-                ? <><Loader2 size={16} className="spin" /> Processando...</>
-                : 'Transferir'
-              }
+            <button
+              type="submit"
+              className="btn-depositar"
+              disabled={transLoading}
+            >
+              {transLoading ? (
+                <>
+                  <Loader2 size={16} className="spin" /> Processando...
+                </>
+              ) : (
+                "Transferir"
+              )}
             </button>
           </form>
         </div>

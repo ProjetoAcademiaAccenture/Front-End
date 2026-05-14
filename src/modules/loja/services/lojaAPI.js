@@ -53,8 +53,8 @@ export const lojaAPI = {
     return response.data;
   },
 
-  processarPagamento: async (dados) => {
-    const response = await lojaApi.post("/api/pagamentos/processar", dados);
+  processarPagamento: async (pagamentoId) => {
+    const response = await lojaApi.post(`/api/pagamentos/${pagamentoId}`);
     return response.data;
   },
 };

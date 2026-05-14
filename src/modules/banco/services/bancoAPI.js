@@ -42,4 +42,9 @@ export const bancoAPI = {
     const response = await bancoApi.post(`/api/contas/${contaId}/transferir`, dados);
     return response.data;
   },
+
+  processarPagamento: async (dados) => {
+      const response = await bancoApi.post("/api/pagamentos/processar", dados);
+      return response.data;
+    },
 };
