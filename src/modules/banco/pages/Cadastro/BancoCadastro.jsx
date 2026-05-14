@@ -92,13 +92,15 @@ export default function BancoCadastro() {
           contaId: data.contaId ?? null,
           numeroConta: data.numeroConta ?? null,
           tipoConta: data.tipoConta ?? tipoConta,
+          saldo: data.saldo ?? 0,
+          limiteCeditoDisponivel: data.limiteCeditoDisponivel ?? 0,
         };
 
         signupBanco(bancoUser, data.token);
 
         setSucesso("Conta bancária criada com sucesso!");
         setTimeout(() => {
-          navigate(ROUTES.BANK_DASHBOARD);
+          navigate(ROUTES.CONFIRMACAO);
         }, 1200);
       } else {
         setErro(resultado.data?.error || "Não foi possível criar a conta.");

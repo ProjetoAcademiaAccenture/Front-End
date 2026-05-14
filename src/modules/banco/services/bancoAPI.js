@@ -11,14 +11,35 @@ export const bancoAPI = {
     return response;
   },
 
-  getTransacoes: async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          transacoes: [],
-        });
-      }, 300);
+  getConta: async (contaId) => {
+    const response = await api.get(`/api/contas/${contaId}`);
+    return response.data;
+  },
+
+  getExtrato: async (contaId, params = {}) => {
+    const response = await api.get(`/api/contas/${contaId}/extrato`, { params });
+    return response.data;
+  },
+
+  depositar: async (contaId, valor) => {
+    const response = await api.patch(`/api/contas/${contaId}/depositar`, null, {
+      params: { valor },
     });
+    return response.data;
+  },
+
+  getBoleto: async (boletoId) => {
+    const response = await api.get(`/api/boletos/${boletoId}`);
+    return response.data;
+  },
+
+  pagarBoleto: async (boletoId) => {
+    const response = await api.patch(`/api/boletos/${boletoId}/pagar`);
+    return response.data;
+  },
+
+  transferir: async (contaId, dados) => {
+    const response = await api.post(`/api/contas/${contaId}/transferir`, dados);
+    return response.data;
   },
 };

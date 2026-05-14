@@ -5,36 +5,45 @@ import './BancoDeposito.css';
 
 import {
   Wallet,
-  CreditCard,
   Building2,
-  Smartphone,
   CheckCircle,
   Info,
-  Landmark,
   Hash,
 } from 'lucide-react';
 
 export default function BancoDeposito() {
   const [valor, setValor] = useState('');
-  const [metodo, setMetodo] = useState('debito');
+  const [metodo, setMetodo] = useState('pix');
   const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
   const { fazerDeposito } = useBanco();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErro('');
     setCarregando(true);
 
     const valorNum = parseFloat(valor);
-    if (valorNum > 0) {
-      setTimeout(() => {
-        fazerDeposito(valorNum);
+    if (!valorNum || valorNum <= 0) {
+      setErro('Informe um valor válido.');
+      setCarregando(false);
+      return;
+    }
+
+    try {
+      const ok = await fazerDeposito(valorNum);
+      if (ok) {
         setSucesso(true);
         setValor('');
-        setCarregando(false);
-
         setTimeout(() => setSucesso(false), 3000);
-      }, 500);
+      } else {
+        setErro('Não foi possível realizar o depósito. Verifique o valor.');
+      }
+    } catch (err) {
+      setErro('Erro ao realizar depósito. Tente novamente.');
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -53,6 +62,12 @@ export default function BancoDeposito() {
         </div>
       )}
 
+      {erro && (
+        <div className="error-alert">
+          {erro}
+        </div>
+      )}
+
       <div className="deposito-container">
         <div className="deposito-card">
           <h2>Novo Depósito</h2>
@@ -64,7 +79,7 @@ export default function BancoDeposito() {
                 id="valor"
                 type="number"
                 step="0.01"
-                min="0"
+                min="0.01"
                 value={valor}
                 onChange={(e) => setValor(e.target.value)}
                 placeholder="1.000,00"
@@ -81,18 +96,10 @@ export default function BancoDeposito() {
                 onChange={(e) => setMetodo(e.target.value)}
                 disabled={carregando}
               >
-                <option value="debito">
-                  <CreditCard size={16} /> Débito
-                </option>
-                <option value="credito">
-                  <CreditCard size={16} /> Crédito
-                </option>
-                <option value="transferencia">
-                  <Landmark size={16} /> Transferência Bancária
-                </option>
-                <option value="pix">
-                  <Smartphone size={16} /> PIX
-                </option>
+                <option value="pix">PIX</option>
+                <option value="transferencia">Transferência Bancária</option>
+                <option value="debito">Débito</option>
+                <option value="credito">Crédito</option>
               </select>
             </div>
 

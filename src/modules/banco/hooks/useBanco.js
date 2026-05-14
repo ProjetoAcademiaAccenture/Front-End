@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { BancoContext } from '../../../context/BancoContext';
+import { BancoContext } from '../context/BancoContext';
 
 export const useBanco = () => {
   const context = useContext(BancoContext);

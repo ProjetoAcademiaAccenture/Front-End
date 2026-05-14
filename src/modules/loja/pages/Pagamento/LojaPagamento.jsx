@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { lojaAPI } from "../../services/lojaAPI";
+import { BancoContext } from "../../../banco/context/BancoContext";
 import PagamentoPix from "../../components/PagamentoPix/PagamentoPix";
 import PagamentoBoleto from "../../components/PagamentoBoleto/PagamentoBoleto";
 import PagamentoCartao from "../../components/PagamentoCartao/PagamentoCartao";
