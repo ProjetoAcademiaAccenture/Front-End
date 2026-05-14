@@ -2,7 +2,6 @@ import { useContext } from "react";
 import {
   Routes,
   Route,
-  Navigate,
   useNavigate,
   useLocation,
 } from "react-router-dom";
@@ -13,6 +12,7 @@ import LojaLayout from "../modules/loja/LojaLayout";
 import BancoLayout from "../modules/banco/BancoLayout";
 
 import "./BrowserWindow.css";
+import { ROUTES } from "../constants";
 
 export default function BrowserWindow() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function BrowserWindow() {
   const handleTabSwitch = (tab) => {
     setActiveModule(tab);
 
-    navigate(tab === "loja" ? "/loja/produtos" : "/banco/dashboard");
+    navigate(tab === "loja" ? ROUTES.LOGIN_SHOP : ROUTES.LOGIN_BANK);
   };
 
   return (
@@ -73,7 +73,7 @@ export default function BrowserWindow() {
 
             <Route path="/banco/*" element={<BancoLayout />} />
 
-            <Route path="*" element={<Navigate to="/loja/login" />} />
+            <Route path="*" element={<navigate to={ROUTES.LOGIN_SHOP} />} />
           </Routes>
         </div>
       </div>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 import { lojaAPI } from "../../services/lojaAPI";
 
 import "./LojaPedidos.css";
 
 export default function LojaPedidos() {
+  const navigate = useNavigate();
   const { user } = useModuleAuth("loja");
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +14,7 @@ export default function LojaPedidos() {
   const [pedidoCancelando, setPedidoCancelando] = useState(null);
   const [filtroSelecionado, setFiltroSelecionado] = useState("TODOS");
 
-  const filtros = ["TODOS", "RESERVADO", "APROVADO", "CANCELADO"];
+  const filtros = ["TODOS", "RESERVADO", "PAGO", "CANCELADO"];
   const pedidosFiltrados =
     filtroSelecionado === "TODOS"
       ? pedidos
@@ -79,6 +81,10 @@ export default function LojaPedidos() {
         setPedidoCancelando(pedidoId);
       }
     }
+  };
+
+  const handlePagarPedido = (pedidoId) => {
+    navigate(`/loja/pagamento/${pedidoId}`);
   };
 
   if (loading)
@@ -175,7 +181,9 @@ export default function LojaPedidos() {
                 )}
 
                 <div className="total-line total">
-                  <span>Total Pago:</span>
+                  <span>
+                    Total {pedido.status === "RESERVADO" ? "a Pagar" : "Pago"}:
+                  </span>
                   <span>
                     R${" "}
                     {pedido.valorFinal.toLocaleString("pt-BR", {
@@ -191,7 +199,14 @@ export default function LojaPedidos() {
               </div>
 
               <div className="pedido-actions">
-                <button className="btn-detalhes">Ver Detalhes</button>
+                {pedido.status === "RESERVADO" && (
+                  <button
+                    className="btn-detalhes"
+                    onClick={() => handlePagarPedido(pedido.id)}
+                  >
+                    Pagar
+                  </button>
+                )}
                 {pedido.status !== "CANCELADO" && (
                   <button
                     className="btn-cancelar"

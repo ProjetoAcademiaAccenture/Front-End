@@ -48,7 +48,7 @@ export default function LojaLayout() {
         <Routes>
           <Route path="produtos" element={<LojaProdutos />} />
           <Route path="carrinho" element={<LojaCarrinho />} />
-          <Route path="pagamento" element={<LojaPagamento />} />
+          <Route path="pagamento/:pedidoId" element={<LojaPagamento />} />
           <Route path="pedidos" element={<LojaPedidos />} />
           <Route path="perfil" element={<LojaPerfil />} />
 

@@ -35,4 +35,26 @@ export const lojaAPI = {
     const response = await lojaApi.patch(`/api/pedidos/${pedidoId}/cancelar`);
     return response;
   },
+
+  getPedidoPorId: async (pedidoId) => {
+    const response = await lojaApi.get(`/api/pedidos/${pedidoId}`);
+    return response.data;
+  },
+
+  getBoletoPorPagamentoId: async (pagamentoId) => {
+    const response = await lojaApi.get(`/api/boletos/pagamento/${pagamentoId}`);
+    return response;
+  },
+
+  pagarBoleto: async (boletoId, senhaTransacao) => {
+    const response = await lojaApi.post(`/api/boletos/${boletoId}/pagar`, {
+      senhaTransacao,
+    });
+    return response.data;
+  },
+
+  processarPagamento: async (dados) => {
+    const response = await lojaApi.post("/api/pagamentos/processar", dados);
+    return response.data;
+  },
 };
