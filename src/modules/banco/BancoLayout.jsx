@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthContext } from "../../auth/context/AuthContext";
 import BancoHeader from "./components/BancoHeader/BancoHeader";
 import BancoMenu from "./components/BancoMenu/BancoMenu";
 import BancoLogin from "./pages/Login/BancoLogin";
@@ -9,11 +11,15 @@ import BancoDeposito from "./pages/Deposito/BancoDeposito";
 import BancoPerfil from "./pages/Perfil/BancoPerfil";
 import Confirmacao from "./pages/confimacaoCadastro/Confirmacao";
 import { useModuleAuth } from "../../auth/hooks/useModuleAuth";
+import { usePathTracker } from "../../auth/hooks/usePathTracker";
 
 import "./BancoLayout.css";
 
 export default function BancoLayout() {
   const { user, isAuthenticated } = useModuleAuth("banco");
+  const { saveLastPath } = useContext(AuthContext);
+
+  usePathTracker("banco", saveLastPath);
 
   const isAdmin = user?.tipoCliente === "ROLE_ADMIN";
 

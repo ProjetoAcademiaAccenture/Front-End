@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthContext } from "../../auth/context/AuthContext";
 
 import LojaHeader from "./components/LojaHeader/LojaHeader";
 import LojaMenu from "./components/LojaMenu/LojaMenu";
@@ -16,12 +18,16 @@ import LojaEstoque from "./pages/Estoque/LojaEstoque";
 
 import { useLojaContext } from "./hooks/useLojaContext";
 import { useModuleAuth } from "../../auth/hooks/useModuleAuth";
+import { usePathTracker } from "../../auth/hooks/usePathTracker";
 
 import "./LojaLayout.css";
 
 export default function LojaLayout() {
   const { carrinho } = useLojaContext();
   const { user, isAuthenticated } = useModuleAuth("loja");
+  const { saveLastPath } = useContext(AuthContext);
+
+  usePathTracker("loja", saveLastPath);
 
   const isAdmin = user?.tipoCliente === "ROLE_ADMIN";
 

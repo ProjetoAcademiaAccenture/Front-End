@@ -1,7 +1,8 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useModuleAuth } from '../../../../auth/hooks/useModuleAuth';
-import './BancoPerfil.css';
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../auth/context/AuthContext";
+import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+import "./BancoPerfil.css";
 
 import {
   User,
@@ -12,15 +13,17 @@ import {
   Trash2,
   AlertTriangle,
   Landmark,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function BancoPerfil() {
-  const { user, logout } = useModuleAuth('banco');
+  const { setLastPath } = useContext(AuthContext);
+  const { user, logout } = useModuleAuth("banco");
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/banco/login');
+    setLastPath("banco", "/banco/login");
+    navigate("/banco/login");
   };
 
   return (

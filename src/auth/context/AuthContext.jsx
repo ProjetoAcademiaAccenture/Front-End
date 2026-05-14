@@ -20,6 +20,11 @@ export const AuthProvider = ({ children }) => {
     banco: getStoredModule("banco"),
   });
 
+  const [lastPaths, setLastPaths] = useState({
+    loja: "/loja/produtos",
+    banco: "/banco/dashboard",
+  });
+
   const [activeModule, setActiveModule] = useState("loja");
   const [pagamentoConcluido, setPagamentoConcluido] = useState({
     id: null,
@@ -82,11 +87,20 @@ export const AuthProvider = ({ children }) => {
     setPagamentoConcluido({ id: null, status: null });
   }, []);
 
+  const saveLastPath = useCallback((module, path) => {
+    setLastPaths((prev) => ({
+      ...prev,
+      [module]: path,
+    }));
+  }, []);
+
   const value = useMemo(
     () => ({
       auth,
       activeModule,
+      lastPaths,
       pagamentoConcluido,
+      saveLastPath,
       setActiveModule,
       setPagamentoConcluido,
       login,
@@ -98,7 +112,9 @@ export const AuthProvider = ({ children }) => {
     [
       auth,
       activeModule,
+      lastPaths,
       pagamentoConcluido,
+      saveLastPath,
       setPagamentoConcluido,
       setActiveModule,
       login,

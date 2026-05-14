@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../../constants";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+import { ROUTES } from "../../../../constants";
 
 import "./BancoMenu.css";
 
@@ -10,8 +10,11 @@ import {
   Wallet,
   User,
 } from 'lucide-react';
+import { useContext } from "react";
+import { AuthContext } from "../../../../auth/context/AuthContext";
 
 export default function BancoMenu() {
+  const { saveLastPath } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useModuleAuth("banco");
@@ -20,6 +23,7 @@ export default function BancoMenu() {
 
   const handleLogout = () => {
     logout("banco");
+    saveLastPath("banco", "/banco/login");
     navigate(ROUTES.LOGIN_BANK);
   };
 

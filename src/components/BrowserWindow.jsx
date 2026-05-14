@@ -4,7 +4,7 @@ import {
   Route,
   useNavigate,
   useLocation,
-  Navigate
+  Navigate,
 } from "react-router-dom";
 
 import { AuthContext } from "../auth/context/AuthContext";
@@ -12,10 +12,12 @@ import { AuthContext } from "../auth/context/AuthContext";
 import LojaLayout from "../modules/loja/LojaLayout";
 import BancoLayout from "../modules/banco/BancoLayout";
 
-import "./BrowserWindow.css";
 import { ROUTES } from "../constants";
 
+import "./BrowserWindow.css";
+
 export default function BrowserWindow() {
+  const { lastPaths, saveLastPath } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,7 +28,12 @@ export default function BrowserWindow() {
   const handleTabSwitch = (tab) => {
     setActiveModule(tab);
 
-    navigate(tab === "loja" ? ROUTES.LOGIN_SHOP : ROUTES.LOGIN_BANK);
+    if (lastPaths[tab]) {
+      saveLastPath(tab, lastPaths[tab]);
+      navigate(lastPaths[tab]);
+    } else {
+      navigate(tab === "loja" ? "/loja/produtos" : "/banco/dashboard");
+    }
   };
 
   return (
