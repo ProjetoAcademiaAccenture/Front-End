@@ -202,4 +202,194 @@ tbody tr.status-fora {
   .estoque-table {
     overflow-x: auto;
   }
+
+}
+/* ── Modal overlay ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeOverlay 0.15s ease;
+}
+
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-box {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: slideUp 0.18s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* Cabeçalho */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a5c38;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a5c38;
+}
+
+.btn-fechar-modal {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.btn-fechar-modal:hover { background: #f5f5f5; color: #333; }
+
+/* Alerta interno */
+.modal-alerta-erro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12px 20px 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #f8d7da;
+  color: #842029;
+  border: 1px solid #f1aeb5;
+  font-size: 13px;
+}
+
+.modal-alerta-erro button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #842029;
+  display: flex;
+  padding: 0;
+}
+
+/* Corpo */
+.modal-body {
+  padding: 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-row label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-row input,
+.form-row textarea {
+  padding: 9px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  background: white;
+}
+
+.form-row input:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: #1a5c38;
+  box-shadow: 0 0 0 3px rgba(26, 92, 56, 0.1);
+}
+
+.form-row textarea { resize: vertical; }
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Rodapé */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px 18px;
+  border-top: 1px solid #eee;
+}
+
+.btn-cancelar-modal {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+  transition: background 0.15s;
+}
+
+.btn-cancelar-modal:hover:not(:disabled) { background: #f5f5f5; }
+
+.btn-salvar-modal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: none;
+  background: #1a5c38;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.btn-salvar-modal:hover:not(:disabled) { background: #154a2d; }
+
+.btn-salvar-modal:disabled,
+.btn-cancelar-modal:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

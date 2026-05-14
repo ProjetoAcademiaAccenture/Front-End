@@ -21,6 +21,7 @@ export default function LojaMenu({ isAdmin }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout } = useModuleAuth("loja");
+  
   const isActive = (path) => location.pathname.includes(path);
 
   const handleLogout = () => {
@@ -35,30 +36,33 @@ export default function LojaMenu({ isAdmin }) {
 
   return (
     <nav className="loja-menu">
-      <Link
-        to="/loja/produtos"
-        onClick={handleSavePath("/loja/produtos")}
-        className={`menu-item ${isActive("/produtos") ? "active" : ""}`}
-      >
-        <PackageOpen /> Produtos
-      </Link>
+      {/* --- VISÃO DO CLIENTE (Não Admin) --- */}
+      {!isAdmin && (
+        <>
+          <Link
+            to="/loja/produtos"
+            className={`menu-item ${isActive("/produtos") ? "active" : ""}`}
+          >
+            <PackageOpen /> Produtos
+          </Link>
 
-      <Link
-        to="/loja/carrinho"
-        onClick={handleSavePath("/loja/carrinho")}
-        className={`menu-item ${isActive("/carrinho") ? "active" : ""}`}
-      >
-        <ShoppingCart /> Carrinho
-      </Link>
+          <Link
+            to="/loja/carrinho"
+            className={`menu-item ${isActive("/carrinho") ? "active" : ""}`}
+          >
+            <ShoppingCart /> Carrinho
+          </Link>
 
-      <Link
-        to="/loja/pedidos"
-        onClick={handleSavePath("/loja/pedidos")}
-        className={`menu-item ${isActive("/pedidos") ? "active" : ""}`}
-      >
-        <ReceiptText /> Meus Pedidos
-      </Link>
+          <Link
+            to="/loja/pedidos"
+            className={`menu-item ${isActive("/pedidos") ? "active" : ""}`}
+          >
+            <ReceiptText /> Meus Pedidos
+          </Link>
+        </>
+      )}
 
+      {/* --- VISÃO DO ADMIN --- */}
       {isAdmin && (
         <>
           <Link
@@ -79,6 +83,7 @@ export default function LojaMenu({ isAdmin }) {
         </>
       )}
 
+      {/* --- ITENS COMUNS (Ambos) --- */}
       <Link
         to="/loja/perfil"
         onClick={handleSavePath("/loja/perfil")}
@@ -88,7 +93,7 @@ export default function LojaMenu({ isAdmin }) {
       </Link>
 
       <button type="button" className="menu-item logout" onClick={handleLogout}>
-        🚪 Sair
+        <LogOut /> Sair
       </button>
     </nav>
   );
