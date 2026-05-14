@@ -57,4 +57,26 @@ export const lojaAPI = {
     const response = await lojaApi.post(`/api/pagamentos/${pagamentoId}`);
     return response.data;
   },
+  ajustarEstoque: async (id, novaQuantidade) => {
+  const response = await lojaApi.patch(
+    `/api/produtos/${id}/estoque`,
+    null,
+    { params: { novaQuantidade } }
+  );
+  return response.data; // retorna { ..., quantidadeEstoque: X }
+},
+
+criarProduto: async (dto) => {
+  const response = await lojaApi.post("/api/produtos", dto);
+  return response.data;
+},
+
+atualizarProduto: async (id, dto) => {
+  const response = await lojaApi.put(`/api/produtos/${id}`, dto);
+  return response.data;
+},
+
+deletarProduto: async (id) => {
+  await lojaApi.delete(`/api/produtos/${id}`);
+},
 };
