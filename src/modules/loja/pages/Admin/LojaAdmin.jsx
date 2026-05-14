@@ -12,6 +12,7 @@ import {
   BarChart3,
   Settings,
   RefreshCw,
+  XCircle,
 } from 'lucide-react';
 
 export default function LojaAdmin() {
@@ -19,6 +20,8 @@ export default function LojaAdmin() {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  const [cancelando, setCancelando] = useState(null); // id do pedido em cancelamento
 
   const carregarDados = useCallback(async () => {
     setLoading(true);
@@ -26,7 +29,7 @@ export default function LojaAdmin() {
     try {
       const [listaProdutos, listaPedidos] = await Promise.all([
         lojaAPI.getProdutos(),
-        lojaAPI.getPedidosTodos(),   // GET /api/pedidos sem filtro
+        lojaAPI.getPedidosTodos(),
       ]);
       setProdutos(listaProdutos);
       setPedidos(listaPedidos);
@@ -42,9 +45,32 @@ export default function LojaAdmin() {
     carregarDados();
   }, [carregarDados]);
 
+  const mostrarMensagem = (msg) => {
+    setMensagem(msg);
+    setTimeout(() => setMensagem(''), 3000);
+  };
+
+  const handleCancelarPedido = async (pedidoId) => {
+    if (!window.confirm(`Deseja cancelar o pedido #${String(pedidoId).padStart(3, '0')}?`)) return;
+    setCancelando(pedidoId);
+    setErro('');
+    try {
+      await lojaAPI.cancelarPedido(pedidoId);
+      setPedidos((prev) =>
+        prev.map((p) => (p.id === pedidoId ? { ...p, status: 'CANCELADO' } : p))
+      );
+      mostrarMensagem(`Pedido #${String(pedidoId).padStart(3, '0')} cancelado.`);
+    } catch (err) {
+      setErro('Erro ao cancelar pedido.');
+      console.error(err);
+    } finally {
+      setCancelando(null);
+    }
+  };
+
   const totalVendido = pedidos
     .filter((p) => p.status === 'PAGO')
-    .reduce((sum, p) => sum + (p.valorFinal ?? 0), 0);  // campo correto da API
+    .reduce((sum, p) => sum + (p.valorFinal ?? 0), 0);
 
   const produtosMaisBaixa = [...produtos]
     .sort((a, b) => a.quantidadeEstoque - b.quantidadeEstoque)
@@ -73,9 +99,8 @@ export default function LojaAdmin() {
         </button>
       </div>
 
-      {erro && (
-        <div className="alerta-erro">⚠ {erro}</div>
-      )}
+      {mensagem && <div className="alerta-sucesso">✓ {mensagem}</div>}
+      {erro && <div className="alerta-erro">⚠ {erro}</div>}
 
       <div className="admin-stats">
 
@@ -153,23 +178,48 @@ export default function LojaAdmin() {
         <div className="admin-section">
           <h2><FileText size={18} /> Últimos Pedidos</h2>
 
-          <div className="pedidos-preview">
+          <div className="table-scroll">
             {pedidos.length === 0 ? (
               <p className="empty-state">Nenhum pedido encontrado.</p>
             ) : (
-              pedidos.slice(0, 5).map((pedido) => (
-                <div key={pedido.id} className="pedido-preview">
-                  <span className="pedido-id">
-                    Pedido #{String(pedido.id).padStart(3, '0')}
-                  </span>
-                  <span className="pedido-value">
-                    R$ {(pedido.valorFinal ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                  </span>
-                  <span className={`pedido-status ${pedido.status.toLowerCase()}`}>
-                    {pedido.status}
-                  </span>
-                </div>
-              ))
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pedido</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pedidos.slice(0, 5).map((pedido) => (
+                    <tr key={pedido.id}>
+                      <td>#{String(pedido.id).padStart(3, '0')}</td>
+                      <td>
+                        R$ {(pedido.valorFinal ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </td>
+                      <td>
+                        <span className={`pedido-status ${pedido.status.toLowerCase()}`}>
+                          {pedido.status}
+                        </span>
+                      </td>
+                      <td>
+                        {pedido.status !== 'CANCELADO' && (
+                          <button
+                            className="btn-deletar"
+                            title="Cancelar pedido"
+                            disabled={cancelando === pedido.id}
+                            onClick={() => handleCancelarPedido(pedido.id)}
+                          >
+                            <XCircle size={14} />
+                            {cancelando === pedido.id ? ' Cancelando...' : ' Cancelar'}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>
