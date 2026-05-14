@@ -34,8 +34,7 @@ export default function BancoTransacoes() {
   const [pixSucesso, setPixSucesso] = useState(false);
 
   // --- Boleto ---
-  const [boletoId, setBoletoId] = useState("");
-  const [boletoDados, setBoletoDados] = useState(null);
+  const [boleto, setBoleto] = useState("");
   const [boletoErro, setBoletoErro] = useState("");
   const [boletoLoading, setBoletoLoading] = useState(false);
   const [boletoPago, setBoletoPago] = useState(false);
@@ -96,49 +95,44 @@ export default function BancoTransacoes() {
   };
 
   // --- Handlers Boleto ---
-  const handleBuscarBoleto = async (e) => {
+
+  const handlePagarBoleto = async (e) => {
     e.preventDefault();
     setBoletoErro("");
-    setBoletoDados(null);
     setBoletoPago(false);
 
-    if (!boletoId.trim()) {
+    if (!boleto.trim()) {
       setBoletoErro("Informe o código do boleto.");
       return;
     }
-
-    setBoletoLoading(true);
-    try {
-      const boleto = await bancoAPI.getBoleto(boletoId.trim());
-      setBoletoDados(boleto);
-    } catch (err) {
-      console.error("Erro ao buscar boleto:", err);
-      setBoletoErro("Boleto não encontrado. Verifique o código.");
-    } finally {
-      setBoletoLoading(false);
+    if (!pagamentoConcluido?.id) {
+      setBoletoErro(
+        "Nenhum pagamento pendente encontrado. Inicie um pagamento na loja.",
+      );
+      return;
     }
-  };
+    if (!senhaTransacao.trim()) {
+      setBoletoErro("Informe a senha da transação.");
+      return;
+    }
 
-  const handlePagarBoleto = async () => {
+    const payload = {
+      pagamentoId: pagamentoConcluido.id,
+      metodoPagamento: "BOLETO",
+      senhaTransacao: senhaTransacao,
+    };
     setBoletoLoading(true);
-    setBoletoErro("");
     try {
-      await bancoAPI.pagarBoleto(boletoDados.id);
+      const resposne = await bancoAPI.processarPagamento(payload);
+      console.log("Resposta do pagamento Boleto:", resposne);
       setBoletoPago(true);
-      setBoletoDados((prev) => ({ ...prev, status: "PAGO" }));
+      confirmarPagamentoGlobal(pagamentoConcluido.id, "APROVADO");
       await carregarDados();
     } catch (err) {
       setBoletoErro(err.response?.data?.message || "Erro ao pagar boleto.");
     } finally {
       setBoletoLoading(false);
     }
-  };
-
-  const handleNovaConsulta = () => {
-    setBoletoId("");
-    setBoletoDados(null);
-    setBoletoErro("");
-    setBoletoPago(false);
   };
 
   // --- Handlers Transferência ---
@@ -179,12 +173,6 @@ export default function BancoTransacoes() {
     } finally {
       setTransLoading(false);
     }
-  };
-
-  const statusColor = (status) => {
-    if (status === "PAGO") return "credito";
-    if (status === "CANCELADO") return "debito";
-    return "pendente";
   };
 
   return (
@@ -311,7 +299,7 @@ export default function BancoTransacoes() {
               onSubmit={(e) => handlePagarPix(e)}
               className="btn-depositar"
               disabled={
-                pixLoading && !pix?.length > 0 && !senhaTransacao.length > 0
+                pixLoading || !pix?.length > 0 || !senhaTransacao.length > 0
               }
             >
               {pixLoading ? (
@@ -333,113 +321,66 @@ export default function BancoTransacoes() {
             <FileText size={18} /> Pagamento de Boleto
           </h2>
 
-          {boletoDados ? (
-            <div className="boleto-detalhes">
-              {boletoPago && (
-                <div className="success-alert">
-                  <CheckCircle size={16} /> Boleto pago com sucesso!
-                </div>
-              )}
-              {boletoErro && (
-                <div className="error-alert">
-                  <AlertCircle size={16} /> {boletoErro}
-                </div>
-              )}
-
-              <div className="boleto-card">
-                <h3>Detalhes do Boleto</h3>
-
-                <div className="boleto-row">
-                  <span className="label">Código:</span>
-                  <span className="value codigo-barras">
-                    {boletoDados.codigoBarras}
-                  </span>
-                </div>
-                <div className="boleto-row">
-                  <span className="label">Valor:</span>
-                  <span className="value valor-destaque">
-                    R${" "}
-                    {Number.parseFloat(boletoDados.valor).toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-                <div className="boleto-row">
-                  <span className="label">Vencimento:</span>
-                  <span className="value">
-                    {new Date(boletoDados.dataVencimento).toLocaleDateString(
-                      "pt-BR",
-                    )}
-                  </span>
-                </div>
-                <div className="boleto-row">
-                  <span className="label">Status:</span>
-                  <span
-                    className={`value status-badge ${statusColor(boletoDados.status)}`}
-                  >
-                    {boletoDados.status}
-                  </span>
-                </div>
-                <div className="boleto-row">
-                  <span className="label">Pedido:</span>
-                  <span className="value">#{boletoDados.pedidoId}</span>
-                </div>
+          <div className="boleto-detalhes">
+            {boletoPago && (
+              <div className="success-alert">
+                <CheckCircle size={16} /> Boleto pago com sucesso!
               </div>
+            )}
+            {boletoErro && (
+              <div className="error-alert">
+                <AlertCircle size={16} /> {boletoErro}
+              </div>
+            )}
+          </div>
 
-              <div className="boleto-acoes">
-                {boletoDados.status === "PENDENTE" && !boletoPago && (
-                  <button
-                    className="btn-depositar"
-                    onClick={handlePagarBoleto}
-                    disabled={boletoLoading}
-                  >
-                    {boletoLoading ? (
-                      <>
-                        <Loader2 size={16} className="spin" /> Processando...
-                      </>
-                    ) : (
-                      `Pagar R$ ${Number.parseFloat(boletoDados.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
-                    )}
-                  </button>
-                )}
-                <button className="btn-secondary" onClick={handleNovaConsulta}>
-                  Nova Consulta
-                </button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleBuscarBoleto} className="operacao-form">
-              <div className="form-group">
-                <label htmlFor="boleto-input">Código do Boleto</label>
-                <input
-                  id="boleto-input"
-                  type="text"
-                  value={boletoId}
-                  onChange={(e) => setBoletoId(e.target.value)}
-                  placeholder="Digite o código do boleto"
-                  disabled={boletoLoading}
-                />
-              </div>
-              {boletoErro && (
-                <div className="error-alert">
-                  <AlertCircle size={16} /> {boletoErro}
-                </div>
-              )}
-              <button
-                type="submit"
-                className="btn-depositar"
+          <form onSubmit={handlePagarBoleto} className="operacao-form">
+            <div className="form-group">
+              <label htmlFor="boleto-input">Código do Boleto</label>
+              <input
+                id="boleto-input"
+                type="text"
+                value={boleto}
+                onChange={(e) => setBoleto(e.target.value)}
+                placeholder="Digite o código do boleto"
                 disabled={boletoLoading}
-              >
-                {boletoLoading ? (
-                  <>
-                    <Loader2 size={16} className="spin" /> Buscando...
-                  </>
-                ) : (
-                  "Buscar Boleto"
-                )}
-              </button>
-            </form>
-          )}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="senha-input">Senha de Transação</label>
+              <input
+                id="senha-input"
+                type="password"
+                value={senhaTransacao}
+                maxLength={4}
+                onChange={(e) => setSenhaTransacao(e.target.value)}
+                placeholder="Digite sua senha de transação"
+                disabled={boletoLoading}
+              />
+            </div>
+            {boletoErro && (
+              <div className="error-alert">
+                <AlertCircle size={16} /> {boletoErro}
+              </div>
+            )}
+            <button
+              type="submit"
+              className="btn-depositar"
+              disabled={
+                boletoLoading ||
+                !boleto?.length > 0 ||
+                !senhaTransacao.length > 0
+              }
+            >
+              {boletoLoading ? (
+                <>
+                  <Loader2 size={16} className="spin" /> Buscando...
+                </>
+              ) : (
+                "Pagar Boleto"
+              )}
+            </button>
+          </form>
         </div>
       )}
 

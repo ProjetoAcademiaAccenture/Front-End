@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import PropTypes from "prop-types";
+import { AuthContext } from "../../../../auth/context/AuthContext";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, CheckCircle2, Timer, ExternalLink } from "lucide-react";
 
+import PropTypes from "prop-types";
 import "./PagamentoPix.css";
-import { AuthContext } from "../../../../auth/context/AuthContext";
 
 export default function PagamentoPix({ pedido }) {
   const { setPagamentoConcluido } = useContext(AuthContext);
