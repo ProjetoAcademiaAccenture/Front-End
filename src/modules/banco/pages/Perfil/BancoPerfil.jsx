@@ -16,13 +16,13 @@ import {
 } from "lucide-react";
 
 export default function BancoPerfil() {
-  const { setLastPath } = useContext(AuthContext);
+  const { saveLastPath } = useContext(AuthContext);
   const { user, logout } = useModuleAuth("banco");
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    setLastPath("banco", "/banco/login");
+    saveLastPath("banco", "/banco/login");
     navigate("/banco/login");
   };
 
