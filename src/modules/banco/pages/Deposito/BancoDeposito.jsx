@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useBanco } from '../../hooks/useBanco';
 import { Input } from '../../../../components/custom/input/input';
 import './BancoDeposito.css';
@@ -24,7 +24,7 @@ export default function BancoDeposito() {
     setErro('');
     setCarregando(true);
 
-    const valorNum = parseFloat(valor);
+    const valorNum = Number.parseFloat(valor);
     if (!valorNum || valorNum <= 0) {
       setErro('Informe um valor válido.');
       setCarregando(false);
@@ -41,6 +41,7 @@ export default function BancoDeposito() {
         setErro('Não foi possível realizar o depósito. Verifique o valor.');
       }
     } catch (err) {
+      console.error('Erro ao realizar depósito:', err);
       setErro('Erro ao realizar depósito. Tente novamente.');
     } finally {
       setCarregando(false);

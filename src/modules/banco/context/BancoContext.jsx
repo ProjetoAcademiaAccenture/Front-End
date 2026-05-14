@@ -1,10 +1,15 @@
-import { createContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { useModuleAuth } from '../../../auth/hooks/useModuleAuth';
 import { bancoAPI } from '../services/bancoAPI'; 
+import PropTypes from 'prop-types';
 
 export const BancoContext = createContext();
 
 export const BancoProvider = ({ children }) => {
+  BancoProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+  };
+
   const { user } = useModuleAuth('banco');
   const contaId = user?.contaId; // ajuste o campo se for diferente
 
@@ -20,7 +25,7 @@ export const BancoProvider = ({ children }) => {
     tipo: t.tipo,                    // já vem em maiúsculo do enum Java
     descricao: t.descricao ?? '—',
     data: new Date(t.dataHora).toLocaleDateString('pt-BR'),
-    valor: parseFloat(t.valor),      // BigDecimal vem como string no JSON
+    valor: Number.parseFloat(t.valor),      // BigDecimal vem como string no JSON
   });
 
   // Busca conta + extrato ao montar
@@ -35,7 +40,7 @@ export const BancoProvider = ({ children }) => {
           bancoAPI.getExtrato(contaId),
         ]);
 
-        setSaldo(parseFloat(conta.saldo));         // BigDecimal → number
+        setSaldo(Number.parseFloat(conta.saldo));         // BigDecimal → number
         setTransacoes(extrato.map(formatarTransacao));
       } catch (err) {
         setErro('Erro ao carregar dados da conta.');
@@ -69,7 +74,7 @@ export const BancoProvider = ({ children }) => {
     try {
       const resultado = await bancoAPI.depositar(contaId, valor);
       // Atualiza saldo com o valor real retornado pelo backend
-      setSaldo(parseFloat(resultado.saldo));
+      setSaldo(Number.parseFloat(resultado.saldo));
       // Rebusca extrato pra garantir sincronia
       const extrato = await bancoAPI.getExtrato(contaId);
       setTransacoes(extrato.map(formatarTransacao));
@@ -92,16 +97,18 @@ export const BancoProvider = ({ children }) => {
     }
   }, [saldo, adicionarTransacao]);
 
+  const contextValue = useMemo(() => ({
+    saldo, setSaldo,
+    transacoes, setTransacoes,
+    loading, erro,
+    adicionarTransacao,
+    fazerDeposito,
+    processarPagamento,
+    extratoVisible, setExtratoVisible,
+  }), [saldo, transacoes, loading, erro, adicionarTransacao, fazerDeposito, processarPagamento, extratoVisible]);
+
   return (
-    <BancoContext.Provider value={{
-      saldo, setSaldo,
-      transacoes, setTransacoes,
-      loading, erro,
-      adicionarTransacao,
-      fazerDeposito,
-      processarPagamento,
-      extratoVisible, setExtratoVisible,
-    }}>
+    <BancoContext.Provider value={contextValue}>
       {children}
     </BancoContext.Provider>
   );

@@ -1,7 +1,7 @@
 import { useBanco } from "../../hooks/useBanco";
 import Extrato from "../../components/Extrato/Extrato";
-import "./BancoDashboard.css";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
+import "./BancoDashboard.css";
 
 import {
   LayoutDashboard,
@@ -10,7 +10,6 @@ import {
   TrendingUp,
   TrendingDown,
   ClipboardList,
-  Shield,
   Loader2,
 } from "lucide-react";
 

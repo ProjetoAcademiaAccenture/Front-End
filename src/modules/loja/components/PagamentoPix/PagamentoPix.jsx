@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import PropTypes from "prop-types";
 import { QRCodeSVG } from "qrcode.react";
 import { Copy, CheckCircle2, Timer, ExternalLink } from "lucide-react";
 
@@ -42,9 +43,9 @@ export default function PagamentoPix({ pedido }) {
       </div>
 
       <div className="copia-cola-section">
-        <label>Utilize o Pix Copia e Cola</label>
+        <label htmlFor="pix-payload">Utilize o Pix Copia e Cola</label>
         <div className="input-group">
-          <input type="text" readOnly value={pixPayload} />
+          <input id="pix-payload" type="text" readOnly value={pixPayload} />
           <button onClick={handleCopy} className={copiado ? "success" : ""}>
             {copiado ? <CheckCircle2 size={18} /> : <Copy size={18} />}
           </button>
@@ -61,3 +62,12 @@ export default function PagamentoPix({ pedido }) {
     </div>
   );
 }
+
+PagamentoPix.propTypes = {
+  pedido: PropTypes.shape({
+    valorFinal: PropTypes.number.isRequired,
+    pagamento: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+};

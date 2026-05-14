@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 
 import "./BancoTransacoes.css";
-import { PiX } from "react-icons/pi";
 
 export default function BancoTransacoes() {
   const { transacoes, carregarDados } = useBanco();
@@ -89,6 +88,7 @@ export default function BancoTransacoes() {
       confirmarPagamentoGlobal(pagamentoConcluido.id, "APROVADO");
       await carregarDados();
     } catch (error) {
+      console.error("Erro ao processar pagamento Pix:", error);
       setPixErro("Erro ao processar pagamento Pix.");
     } finally {
       setPixLoading(false);
@@ -112,6 +112,7 @@ export default function BancoTransacoes() {
       const boleto = await bancoAPI.getBoleto(boletoId.trim());
       setBoletoDados(boleto);
     } catch (err) {
+      console.error("Erro ao buscar boleto:", err);
       setBoletoErro("Boleto não encontrado. Verifique o código.");
     } finally {
       setBoletoLoading(false);
@@ -151,7 +152,7 @@ export default function BancoTransacoes() {
       return;
     }
 
-    const valor = parseFloat(transValor);
+    const valor = Number.parseFloat(transValor);
     if (valor <= 0) {
       setTransErro("Informe um valor válido.");
       return;
@@ -283,8 +284,9 @@ export default function BancoTransacoes() {
 
           <form onSubmit={handlePagarPix} className="operacao-form">
             <div className="form-group">
-              <label>Código Pix</label>
+              <label htmlFor="pix-input">Código Pix</label>
               <input
+                id="pix-input"
                 type="text"
                 value={pix}
                 onChange={(e) => setPix(e.target.value)}
@@ -293,8 +295,9 @@ export default function BancoTransacoes() {
               />
             </div>
             <div className="form-group">
-              <label>Senha de Transação</label>
+              <label htmlFor="senha-input">Senha de Transação</label>
               <input
+                id="senha-input"
                 type="password"
                 value={senhaTransacao}
                 maxLength={4}
@@ -330,38 +333,7 @@ export default function BancoTransacoes() {
             <FileText size={18} /> Pagamento de Boleto
           </h2>
 
-          {!boletoDados ? (
-            <form onSubmit={handleBuscarBoleto} className="operacao-form">
-              <div className="form-group">
-                <label>Código do Boleto</label>
-                <input
-                  type="text"
-                  value={boletoId}
-                  onChange={(e) => setBoletoId(e.target.value)}
-                  placeholder="Digite o código do boleto"
-                  disabled={boletoLoading}
-                />
-              </div>
-              {boletoErro && (
-                <div className="error-alert">
-                  <AlertCircle size={16} /> {boletoErro}
-                </div>
-              )}
-              <button
-                type="submit"
-                className="btn-depositar"
-                disabled={boletoLoading}
-              >
-                {boletoLoading ? (
-                  <>
-                    <Loader2 size={16} className="spin" /> Buscando...
-                  </>
-                ) : (
-                  "Buscar Boleto"
-                )}
-              </button>
-            </form>
-          ) : (
+          {boletoDados ? (
             <div className="boleto-detalhes">
               {boletoPago && (
                 <div className="success-alert">
@@ -387,7 +359,7 @@ export default function BancoTransacoes() {
                   <span className="label">Valor:</span>
                   <span className="value valor-destaque">
                     R${" "}
-                    {parseFloat(boletoDados.valor).toLocaleString("pt-BR", {
+                    {Number.parseFloat(boletoDados.valor).toLocaleString("pt-BR", {
                       minimumFractionDigits: 2,
                     })}
                   </span>
@@ -426,7 +398,7 @@ export default function BancoTransacoes() {
                         <Loader2 size={16} className="spin" /> Processando...
                       </>
                     ) : (
-                      `Pagar R$ ${parseFloat(boletoDados.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+                      `Pagar R$ ${Number.parseFloat(boletoDados.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
                     )}
                   </button>
                 )}
@@ -435,6 +407,38 @@ export default function BancoTransacoes() {
                 </button>
               </div>
             </div>
+          ) : (
+            <form onSubmit={handleBuscarBoleto} className="operacao-form">
+              <div className="form-group">
+                <label htmlFor="boleto-input">Código do Boleto</label>
+                <input
+                  id="boleto-input"
+                  type="text"
+                  value={boletoId}
+                  onChange={(e) => setBoletoId(e.target.value)}
+                  placeholder="Digite o código do boleto"
+                  disabled={boletoLoading}
+                />
+              </div>
+              {boletoErro && (
+                <div className="error-alert">
+                  <AlertCircle size={16} /> {boletoErro}
+                </div>
+              )}
+              <button
+                type="submit"
+                className="btn-depositar"
+                disabled={boletoLoading}
+              >
+                {boletoLoading ? (
+                  <>
+                    <Loader2 size={16} className="spin" /> Buscando...
+                  </>
+                ) : (
+                  "Buscar Boleto"
+                )}
+              </button>
+            </form>
           )}
         </div>
       )}
@@ -459,8 +463,9 @@ export default function BancoTransacoes() {
 
           <form onSubmit={handleTransferencia} className="operacao-form">
             <div className="form-group">
-              <label>Conta de Destino *</label>
+              <label htmlFor="conta-destino-input">Conta de Destino *</label>
               <input
+                id="conta-destino-input"
                 type="text"
                 value={transContaDestino}
                 onChange={(e) => setTransContaDestino(e.target.value)}
@@ -469,8 +474,9 @@ export default function BancoTransacoes() {
               />
             </div>
             <div className="form-group">
-              <label>Valor (R$) *</label>
+              <label htmlFor="valor-input">Valor (R$) *</label>
               <input
+                id="valor-input"
                 type="number"
                 step="0.01"
                 min="0.01"
@@ -481,8 +487,9 @@ export default function BancoTransacoes() {
               />
             </div>
             <div className="form-group">
-              <label>Descrição</label>
+              <label htmlFor="descricao-input">Descrição</label>
               <input
+                id="descricao-input"
                 type="text"
                 value={transDescricao}
                 onChange={(e) => setTransDescricao(e.target.value)}

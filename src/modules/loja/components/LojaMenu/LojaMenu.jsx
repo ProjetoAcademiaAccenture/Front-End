@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import PropTypes from "prop-types";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
@@ -92,3 +93,7 @@ export default function LojaMenu({ isAdmin }) {
     </nav>
   );
 }
+
+LojaMenu.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
+};

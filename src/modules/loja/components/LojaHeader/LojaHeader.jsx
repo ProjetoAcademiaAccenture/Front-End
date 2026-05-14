@@ -1,6 +1,6 @@
-import React from 'react';
-import './LojaHeader.css';
+import PropTypes from 'prop-types';
 import { ShoppingCart } from 'lucide-react';
+import './LojaHeader.css';
 
 export default function LojaHeader({ usuarioNome, carrinhoQuantidade }) {
   return (
@@ -12,9 +12,14 @@ export default function LojaHeader({ usuarioNome, carrinhoQuantidade }) {
       {carrinhoQuantidade > 0 && (
         <div className="carrinho-badge">
           <ShoppingCart style={{ marginRight: '10px' }} />
-          {carrinhoQuantidade} item{carrinhoQuantidade !== 1 ? 's' : ''}
+          {carrinhoQuantidade} item{carrinhoQuantidade === 1 ? '' : 's'}
         </div>
       )}
     </header>
   );
 }
+
+LojaHeader.propTypes = {
+  usuarioNome: PropTypes.string,
+  carrinhoQuantidade: PropTypes.number,
+};
