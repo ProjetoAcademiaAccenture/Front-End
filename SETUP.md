@@ -86,7 +86,7 @@ O navegador abrirá automaticamente em `http://localhost:3000`
 ### Erro: "Port 3000 already in use"
 - Use uma porta diferente:
   ```bash
-  PORT=3001 npm start
+  PORT=3000 npm start
   ```
 
 ### Erro: Module not found

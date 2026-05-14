@@ -79,4 +79,8 @@ atualizarProduto: async (id, dto) => {
 deletarProduto: async (id) => {
   await lojaApi.delete(`/api/produtos/${id}`);
 },
+getPedidosTodos: async () => {
+  const response = await lojaApi.get('/api/pedidos');
+  return response.data;
+},
 };
