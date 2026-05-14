@@ -4,6 +4,7 @@ import {
   Route,
   useNavigate,
   useLocation,
+  Navigate
 } from "react-router-dom";
 
 import { AuthContext } from "../auth/context/AuthContext";
@@ -73,7 +74,7 @@ export default function BrowserWindow() {
 
             <Route path="/banco/*" element={<BancoLayout />} />
 
-            <Route path="*" element={<navigate to={ROUTES.LOGIN_SHOP} />} />
+            <Route path="*" element={<Navigate to={ROUTES.LOGIN_SHOP} />} />
           </Routes>
         </div>
       </div>
