@@ -43,7 +43,7 @@ export default function LojaCarrinho() {
           localStorage.removeItem(carrinhoKey);
           esvazearCarrinho();
           navigate(ROUTES.ORDERS);
-        }, 3000);
+        }, 1000);
       } else {
         alert("Houve um erro ao finalizar o pedido. Tente novamente.");
       }

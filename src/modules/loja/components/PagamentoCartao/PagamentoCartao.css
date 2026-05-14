@@ -1,0 +1,118 @@
+.cartao-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+/* Estilo do Cartão Visual */
+.cartao-visual {
+  width: 100%;
+  height: 200px;
+  border-radius: 15px;
+  padding: 25px;
+  color: white;
+  position: relative;
+  transition: all 0.5s ease;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+.cartao-visual.debito {
+  background: linear-gradient(135deg, #065f46 0%, #064e3b 100%);
+}
+
+.cartao-chip {
+  width: 45px;
+  height: 35px;
+  background: #fbbf24;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.cartao-numero-display {
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  font-family: 'Courier New', monospace;
+}
+
+.cartao-footer-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* Formulário */
+.metodo-selector {
+  display: flex;
+  background: #f3f4f6;
+  padding: 5px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.metodo-selector button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.metodo-selector button.active {
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #2563eb;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.input-box label {
+  font-size: 0.85rem;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.input-box input, .input-box select {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline-color: #2563eb;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.btn-pagar-cartao {
+  width: 100%;
+  padding: 15px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-pagar-cartao:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}

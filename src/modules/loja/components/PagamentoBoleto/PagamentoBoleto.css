@@ -1,0 +1,49 @@
+.boleto-container {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.barcode-display {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 12px;
+    border: 1px dashed #9ca3af;
+    border-radius: 4px;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.barcode-display code {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: #111827;
+    word-break: break-all;
+}
+
+.alerta-atraso {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.input-senha-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input-senha-group input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    flex: 1;
+}
