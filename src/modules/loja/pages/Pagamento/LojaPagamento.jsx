@@ -6,8 +6,9 @@ import PagamentoPix from "../../components/PagamentoPix/PagamentoPix";
 import PagamentoBoleto from "../../components/PagamentoBoleto/PagamentoBoleto";
 import PagamentoCartao from "../../components/PagamentoCartao/PagamentoCartao";
 
-import "./LojaPagamento.css";
 import { ROUTES } from "../../../../constants";
+
+import "./LojaPagamento.css";
 
 export default function LojaPagamento() {
   const { pedidoId } = useParams();
@@ -52,10 +53,36 @@ export default function LojaPagamento() {
 
   const handleFinalizar = async (dadosFilho) => {
     setProcessando(true);
+    setMensagem("");
     try {
-      // TODO: lógica de pagamento por cartão.
+      const payload = {
+        pagamentoId: pedido.pagamento.id,
+        metodoPagamento: metodoSelecionado,
+        senhaTransacao: dadosFilho.senhaTransacao,
+      };
+
+      console.log("Enviando pagamento para o backend:", payload);
+      const response = await lojaAPI.processarPagamento(payload);
+      console.log("Resposta do processamento de pagamento:", response);
+
+      if (response?.status === 200) {
+        if (response.data.status === "RECUSADO") {
+          setMensagem(
+            "Transação Recusada: Verifique seu saldo ou limite disponível.",
+          );
+        }
+        if (response.data.status === "APROVADO") {
+          setMensagem("Pagamento aprovado com sucesso!");
+        }
+        setTimeout(() => {
+          navigate(ROUTES.ORDERS);
+        }, 2000);
+      }
     } catch (error) {
-      setMensagem(error.response?.data?.message || "Erro na transação.");
+      console.error("Erro no processamento do cartão:", error);
+      setMensagem(
+        error ?? "Erro interno ao processar transação com a operadora.",
+      );
     } finally {
       setProcessando(false);
     }
@@ -115,6 +142,7 @@ export default function LojaPagamento() {
           {["CREDITO", "DEBITO"].includes(metodoSelecionado) && (
             <PagamentoCartao
               valorTotal={pedido.valorFinal}
+              metodoSelecionado={metodoSelecionado}
               aoFinalizar={(dados) => {
                 setMetodoSelecionado(dados.metodo);
                 handleFinalizar(dados);

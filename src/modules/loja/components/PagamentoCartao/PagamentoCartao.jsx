@@ -1,18 +1,20 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { CreditCard, User, Calendar, Lock } from "lucide-react";
 import "./PagamentoCartao.css";
 
 export default function PagamentoCartao({
   valorTotal,
+  metodoSelecionado,
   processando,
   aoFinalizar,
 }) {
+  const [metodo] = useState(metodoSelecionado);
   const [dados, setDados] = useState({
     nome: "",
     numero: "",
     validade: "",
     cvv: "",
-    metodo: "CREDITO",
     parcelas: "1",
     senhaTransacao: "",
   });
@@ -35,13 +37,48 @@ export default function PagamentoCartao({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const numeroLimpo = dados.numero.replace(/\s/g, "");
+    if (numeroLimpo.length !== 16) {
+      alert("Número de cartão inválido. Ele deve conter 16 dígitos.");
+      return;
+    }
+
+    const validadeRegex = /^(0[1-9]|1[0-2])\/(\d{2})$/;
+    if (!validadeRegex.test(dados.validade)) {
+      alert(
+        "Formato de data de validade inválido. Use o padrão MM/AA (Ex: 08/29).",
+      );
+      return;
+    }
+
+    const [mes, ano] = dados.validade.split("/").map(Number);
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear() % 100; // Pega os últimos 2 dígitos (Ex: 2026 -> 26)
+    const mesAtual = dataAtual.getMonth() + 1; // getMonth vai de 0 a 11
+
+    if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) {
+      alert("O cartão informado está vencido!");
+      return;
+    }
+
+    if (dados.cvv.length !== 3) {
+      alert("O código de segurança (CVV) deve conter exatamente 3 dígitos.");
+      return;
+    }
+
+    if (dados.senhaTransacao.length !== 4) {
+      alert("A senha de transação bancária precisa ter 4 dígitos.");
+      return;
+    }
+
     aoFinalizar(dados);
   };
 
   return (
     <div className="cartao-container">
       {/* Visual do Cartão Simbólico */}
-      <div className={`cartao-visual ${dados.metodo.toLowerCase()}`}>
+      <div className={`cartao-visual ${metodo.toLowerCase()}`}>
         <div className="cartao-chip" />
         <div className="cartao-numero-display">
           {dados.numero || "**** **** **** ****"}
@@ -63,14 +100,14 @@ export default function PagamentoCartao({
         <div className="metodo-selector">
           <button
             type="button"
-            className={dados.metodo === "CREDITO" ? "active" : ""}
+            className={metodo === "CREDITO" ? "active" : ""}
             onClick={() => setDados({ ...dados, metodo: "CREDITO" })}
           >
             Crédito
           </button>
           <button
             type="button"
-            className={dados.metodo === "DEBITO" ? "active" : ""}
+            className={metodo === "DEBITO" ? "active" : ""}
             onClick={() => setDados({ ...dados, metodo: "DEBITO" })}
           >
             Débito
@@ -84,7 +121,7 @@ export default function PagamentoCartao({
           <input
             type="text"
             name="nome"
-            placeholder="Ex: JOÃO A SILVA"
+            placeholder="Ex: Ximira Xelo"
             value={dados.nome}
             onChange={handleChange}
             required
@@ -137,10 +174,11 @@ export default function PagamentoCartao({
           </div>
         </div>
 
-        {dados.metodo === "CREDITO" && (
+        {metodo === "CREDITO" && (
           <div className="input-box">
-            <label>Parcelamento</label>
+            <label htmlFor="parcelas">Parcelamento</label>
             <select
+              id="parcelas"
               name="parcelas"
               value={dados.parcelas}
               onChange={(e) => setDados({ ...dados, parcelas: e.target.value })}
@@ -169,10 +207,28 @@ export default function PagamentoCartao({
           />
         </div>
 
-        <button type="submit" className="btn-pagar" disabled={processando}>
+        <button
+          type="submit"
+          className="btn-pagar"
+          disabled={
+            processando ||
+            dados.nome.trim().length < 3 ||
+            dados.numero.length < 12 ||
+            dados.validade.length !== 5 ||
+            dados.cvv.length !== 3 ||
+            dados.senhaTransacao.length !== 4
+          }
+        >
           {processando ? "Processando..." : "Finalizar Pagamento"}
         </button>
       </form>
     </div>
   );
 }
+
+PagamentoCartao.propTypes = {
+  valorTotal: PropTypes.number.isRequired,
+  metodoSelecionado: PropTypes.string.isRequired,
+  processando: PropTypes.bool.isRequired,
+  aoFinalizar: PropTypes.func.isRequired,
+};
