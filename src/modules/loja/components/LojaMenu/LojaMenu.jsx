@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   ReceiptText,
   UserStar,
+  LogOut,
 } from "lucide-react";
 
 import "./LojaMenu.css";
