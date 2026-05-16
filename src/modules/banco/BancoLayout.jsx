@@ -12,6 +12,7 @@ import BancoPerfil from "./pages/Perfil/BancoPerfil";
 import Confirmacao from "./pages/confimacaoCadastro/Confirmacao";
 import { useModuleAuth } from "../../auth/hooks/useModuleAuth";
 import { usePathTracker } from "../../auth/hooks/usePathTracker";
+import { BancoProvider } from "./context/BancoContext";
 
 import "./BancoLayout.css";
 
@@ -35,23 +36,25 @@ export default function BancoLayout() {
   }
 
   return (
-    <div className="banco-layout">
-      <BancoHeader
-        usuarioNome={user?.nome}
-        saldo={user?.saldo}
-        limite={user?.limiteCeditoDisponivel}
-      />
-      <BancoMenu isAdmin={isAdmin} />
+    <BancoProvider>
+      <div className="banco-layout">
+        <BancoHeader
+          usuarioNome={user?.nome}
+          saldo={user?.saldo}
+          limite={user?.limiteCeditoDisponivel}
+        />
+        <BancoMenu isAdmin={isAdmin} />
 
-      <div className="banco-content">
-        <Routes>
-          <Route path="dashboard" element={<BancoDashboard />} />
-          <Route path="transacoes" element={<BancoTransacoes />} />
-          <Route path="deposito" element={<BancoDeposito />} />
-          <Route path="perfil" element={<BancoPerfil />} />
-          <Route path="*" element={<Navigate to="dashboard" replace />} />
-        </Routes>
+        <div className="banco-content">
+          <Routes>
+            <Route path="dashboard" element={<BancoDashboard />} />
+            <Route path="transacoes" element={<BancoTransacoes />} />
+            <Route path="deposito" element={<BancoDeposito />} />
+            <Route path="perfil" element={<BancoPerfil />} />
+            <Route path="*" element={<Navigate to="dashboard" replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </BancoProvider>
   );
 }
