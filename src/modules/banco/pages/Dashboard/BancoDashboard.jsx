@@ -11,11 +11,16 @@ import {
   TrendingDown,
   ClipboardList,
   Loader2,
+  RefreshCcw,
 } from "lucide-react";
 
 export default function BancoDashboard() {
-  const { saldo, transacoes, loading, erro } = useBanco();
+  const { saldo, transacoes, loading, erro, carregarDados } = useBanco();
   const { user } = useModuleAuth("banco");
+
+  const handleRefrash = () => {
+    carregarDados();
+  };
 
   if (loading) {
     return (
@@ -43,6 +48,9 @@ export default function BancoDashboard() {
       <div className="page-header">
         <h1>
           <LayoutDashboard size={22} /> Dashboard
+          {<button className="refresh-button" onClick={handleRefrash}>
+            <RefreshCcw size={16} />
+          </button>}
         </h1>
         <p className="page-subtitle">Visão geral da sua conta</p>
       </div>
