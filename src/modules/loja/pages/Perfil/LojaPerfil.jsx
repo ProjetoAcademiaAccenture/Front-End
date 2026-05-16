@@ -19,6 +19,8 @@ import {
   AlertTriangle,
   MapPin,
   Loader2,
+  Pencil,
+  Save,
 } from "lucide-react";
 
 import "./LojaPerfil.css";
@@ -27,8 +29,13 @@ import "./LojaPerfil.css";
 function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
   const [enderecos, setEnderecos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [confirmDelete, setConfirmDelete] = useState(null); // id do endereço a deletar
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [deletando, setDeletando] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
+  const [formEdicao, setFormEdicao] = useState({});
+  const [buscandoCep, setBuscandoCep] = useState(false);
+  const [salvandoEdicao, setSalvandoEdicao] = useState(false);
+  const [erroEdicao, setErroEdicao] = useState("");
 
   useEffect(() => {
     carregarEnderecos();
@@ -61,9 +68,70 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
     }
   };
 
+  const iniciarEdicao = (end) => {
+    setEditandoId(end.id);
+    setFormEdicao({ ...end });
+    setErroEdicao("");
+  };
+
+  const cancelarEdicao = () => {
+    setEditandoId(null);
+    setFormEdicao({});
+    setErroEdicao("");
+  };
+
+  const handleChangeEdicao = (e) => {
+    setFormEdicao((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCepBlurEdicao = async () => {
+    const cep = formEdicao.cep?.replace(/\D/g, "");
+    if (!cep || cep.length !== 8) return;
+    try {
+      setBuscandoCep(true);
+      const data = await getAddressByCep(cep);
+      setFormEdicao((prev) => ({
+        ...prev,
+        logradouro: data.logradouro || prev.logradouro,
+        bairro: data.bairro || prev.bairro,
+        cidade: data.cidade || prev.cidade,
+        uf: data.estado || prev.uf,
+      }));
+    } catch {
+      setErroEdicao("CEP não encontrado.");
+    } finally {
+      setBuscandoCep(false);
+    }
+  };
+
+  const handleSalvarEdicao = async () => {
+    setErroEdicao("");
+    const obrigatorios = ["cep", "logradouro", "bairro", "cidade", "uf", "numero"];
+    for (const campo of obrigatorios) {
+      if (!formEdicao[campo]?.trim()) {
+        setErroEdicao("Preencha todos os campos obrigatórios.");
+        return;
+      }
+    }
+    try {
+      setSalvandoEdicao(true);
+      const atualizado = await lojaAPI.atualizarEndereco(clienteId, editandoId, formEdicao);
+      setEnderecos((prev) =>
+        prev.map((e) => (e.id === editandoId ? { ...e, ...atualizado } : e))
+      );
+      setEditandoId(null);
+      setFormEdicao({});
+    } catch (err) {
+      console.error("Erro ao atualizar endereço:", err);
+      setErroEdicao("Erro ao salvar. Tente novamente.");
+    } finally {
+      setSalvandoEdicao(false);
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-box modal-box--large" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <h3>
             <MapPin size={18} /> Meus Endereços
@@ -83,28 +151,158 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
             <p className="modal-empty">Nenhum endereço cadastrado.</p>
           ) : (
             <ul className="endereco-list">
-              {enderecos.map((end) => (
-                <li key={end.id} className="endereco-item">
-                  <div className="endereco-info">
-                    <span className="endereco-tipo">{end.tipoEndereco}</span>
-                    <span className="endereco-linha">
-                      {end.logradouro}, {end.numero}
-                      {end.complemento ? ` - ${end.complemento}` : ""}
-                    </span>
-                    <span className="endereco-linha">
-                      {end.bairro} — {end.cidade}/{end.uf}
-                    </span>
-                    <span className="endereco-cep">CEP: {end.cep}</span>
-                  </div>
-                  <button
-                    className="btn-icon-delete"
-                    onClick={() => setConfirmDelete(end.id)}
-                    title="Remover endereço"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </li>
-              ))}
+              {enderecos.map((end) =>
+                editandoId === end.id ? (
+                  /* ── Formulário de Edição inline ── */
+                  <li key={end.id} className="endereco-item endereco-item--editing">
+                    {erroEdicao && <p className="modal-erro">{erroEdicao}</p>}
+
+                    <div className="form-row">
+                      <label>CEP *</label>
+                      <div className="input-cep-wrap">
+                        <input
+                          name="cep"
+                          value={formEdicao.cep || ""}
+                          onChange={handleChangeEdicao}
+                          onBlur={handleCepBlurEdicao}
+                          placeholder="00000-000"
+                          maxLength={9}
+                        />
+                        {buscandoCep && <Loader2 size={16} className="spin cep-loader" />}
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <label>Logradouro *</label>
+                      <input
+                        name="logradouro"
+                        value={formEdicao.logradouro || ""}
+                        onChange={handleChangeEdicao}
+                        placeholder="Rua, Avenida..."
+                      />
+                    </div>
+
+                    <div className="form-grid">
+                      <div className="form-row">
+                        <label>Número *</label>
+                        <input
+                          name="numero"
+                          value={formEdicao.numero || ""}
+                          onChange={handleChangeEdicao}
+                          placeholder="123"
+                        />
+                      </div>
+                      <div className="form-row">
+                        <label>Complemento</label>
+                        <input
+                          name="complemento"
+                          value={formEdicao.complemento || ""}
+                          onChange={handleChangeEdicao}
+                          placeholder="Apto, Bloco..."
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <label>Bairro *</label>
+                      <input
+                        name="bairro"
+                        value={formEdicao.bairro || ""}
+                        onChange={handleChangeEdicao}
+                        placeholder="Bairro"
+                      />
+                    </div>
+
+                    <div className="form-grid">
+                      <div className="form-row">
+                        <label>Cidade *</label>
+                        <input
+                          name="cidade"
+                          value={formEdicao.cidade || ""}
+                          onChange={handleChangeEdicao}
+                          placeholder="Cidade"
+                        />
+                      </div>
+                      <div className="form-row">
+                        <label>UF *</label>
+                        <input
+                          name="uf"
+                          value={formEdicao.uf || ""}
+                          onChange={handleChangeEdicao}
+                          placeholder="SP"
+                          maxLength={2}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <label>Tipo de Endereço</label>
+                      <select
+                        name="tipoEndereco"
+                        value={formEdicao.tipoEndereco || "RESIDENCIAL"}
+                        onChange={handleChangeEdicao}
+                      >
+                        <option value="RESIDENCIAL">Residencial</option>
+                        <option value="COMERCIAL">Comercial</option>
+                        <option value="OUTRO">Outro</option>
+                      </select>
+                    </div>
+
+                    <div className="edicao-actions">
+                      <button
+                        className="btn-cancel"
+                        onClick={cancelarEdicao}
+                        disabled={salvandoEdicao}
+                      >
+                        <X size={14} /> Cancelar
+                      </button>
+                      <button
+                        className="btn-salvar"
+                        onClick={handleSalvarEdicao}
+                        disabled={salvandoEdicao}
+                      >
+                        {salvandoEdicao ? (
+                          <Loader2 size={14} className="spin" />
+                        ) : (
+                          <Save size={14} />
+                        )}
+                        Salvar
+                      </button>
+                    </div>
+                  </li>
+                ) : (
+                  /* ── Visualização normal ── */
+                  <li key={end.id} className="endereco-item">
+                    <div className="endereco-info">
+                      <span className="endereco-tipo">{end.tipoEndereco}</span>
+                      <span className="endereco-linha">
+                        {end.logradouro}, {end.numero}
+                        {end.complemento ? ` - ${end.complemento}` : ""}
+                      </span>
+                      <span className="endereco-linha">
+                        {end.bairro} — {end.cidade}/{end.uf}
+                      </span>
+                      <span className="endereco-cep">CEP: {end.cep}</span>
+                    </div>
+                    <div className="endereco-acoes">
+                      <button
+                        className="btn-icon-edit"
+                        onClick={() => iniciarEdicao(end)}
+                        title="Editar endereço"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        className="btn-icon-delete"
+                        onClick={() => setConfirmDelete(end.id)}
+                        title="Remover endereço"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </li>
+                )
+              )}
             </ul>
           )}
 
@@ -328,13 +526,83 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
   );
 }
 
+// ── Modal de Confirmação de Deletar Conta ─────────────────────────────────
+function ModalDeletarConta({ onClose, onConfirmar, deletando }) {
+  const [confirmText, setConfirmText] = useState("");
+  const textoEsperado = "DELETAR";
+  const confirmacaoValida = confirmText === textoEsperado;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box modal-box--danger" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header modal-header--danger">
+          <h3>
+            <AlertTriangle size={18} /> Deletar Conta
+          </h3>
+          <button className="modal-close" onClick={onClose} disabled={deletando}>
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="modal-body">
+          <div className="danger-warning">
+            <AlertTriangle size={40} color="#e74c3c" />
+            <p className="danger-title">Esta ação é permanente e irreversível.</p>
+            <p className="danger-desc">
+              Ao deletar sua conta, todos os seus dados, pedidos e endereços serão
+              permanentemente removidos. Não será possível recuperar as informações.
+            </p>
+          </div>
+
+          <div className="form-row confirm-text-row">
+            <label>
+              Digite <strong>{textoEsperado}</strong> para confirmar:
+            </label>
+            <input
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder={textoEsperado}
+              disabled={deletando}
+              className={confirmacaoValida ? "input-valid" : ""}
+            />
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn-cancel-modal" onClick={onClose} disabled={deletando}>
+            Cancelar
+          </button>
+          <button
+            className="btn-confirm-delete btn-confirm-delete--full"
+            onClick={onConfirmar}
+            disabled={!confirmacaoValida || deletando}
+          >
+            {deletando ? (
+              <>
+                <Loader2 size={14} className="spin" /> Deletando...
+              </>
+            ) : (
+              <>
+                <Trash size={14} /> Deletar Minha Conta
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Componente Principal ───────────────────────────────────────────────────
 export default function LojaPerfil() {
   const { saveLastPath } = useContext(AuthContext);
   const { user, logout } = useModuleAuth("loja");
   const navigate = useNavigate();
 
-  const [modal, setModal] = useState(null); // null | "listar" | "adicionar"
+  const [modal, setModal] = useState(null); // null | "listar" | "adicionar" | "deletarConta"
+  const [deletandoConta, setDeletandoConta] = useState(false);
+
+  const clienteId = user?.clienteId;
 
   const handleLogout = () => {
     logout();
@@ -342,7 +610,19 @@ export default function LojaPerfil() {
     navigate("/");
   };
 
-const clienteId = user?.clienteId;
+  const handleDeletarConta = async () => {
+    try {
+      setDeletandoConta(true);
+      await lojaAPI.deletarCliente(clienteId);
+      logout();
+      saveLastPath("loja", "/loja/login");
+      navigate("/");
+    } catch (err) {
+      console.error("Erro ao deletar conta:", err);
+      setDeletandoConta(false);
+      // Opcionalmente: exibir toast/snackbar de erro aqui
+    }
+  };
 
   return (
     <div className="loja-page">
@@ -420,7 +700,7 @@ const clienteId = user?.clienteId;
             <LogOut size={16} /> Sair da Conta
           </button>
 
-          <button className="btn-delete">
+          <button className="btn-delete" onClick={() => setModal("deletarConta")}>
             <Trash size={16} /> Deletar Conta
           </button>
 
@@ -444,6 +724,14 @@ const clienteId = user?.clienteId;
           clienteId={clienteId}
           onClose={() => setModal(null)}
           onSucesso={() => setModal("listar")}
+        />
+      )}
+
+      {modal === "deletarConta" && (
+        <ModalDeletarConta
+          onClose={() => !deletandoConta && setModal(null)}
+          onConfirmar={handleDeletarConta}
+          deletando={deletandoConta}
         />
       )}
     </div>
