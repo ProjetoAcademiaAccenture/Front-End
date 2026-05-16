@@ -55,14 +55,14 @@ export const lojaAPI = {
 
   processarPagamento: async (payload) => {
     const response = await lojaApi.post("/api/pagamentos/processar", payload);
-    return response
+    return response;
   },
 
   ajustarEstoque: async (id, novaQuantidade) => {
     const response = await lojaApi.patch(`/api/produtos/${id}/estoque`, null, {
       params: { novaQuantidade },
     });
-    return response.data; // retorna { ..., quantidadeEstoque: X }
+    return response.data;
   },
 
   criarProduto: async (dto) => {
@@ -78,8 +78,29 @@ export const lojaAPI = {
   deletarProduto: async (id) => {
     await lojaApi.delete(`/api/produtos/${id}`);
   },
+
   getPedidosTodos: async () => {
     const response = await lojaApi.get("/api/pedidos");
     return response.data;
+  },
+
+
+  getEnderecos: async (clienteId) => {
+    const response = await lojaApi.get(`/api/clientes/${clienteId}/enderecos`);
+    return response.data;
+  },
+
+  getEnderecoPorId: async (clienteId, enderecoId) => {
+    const response = await lojaApi.get(`/api/clientes/${clienteId}/enderecos/${enderecoId}`);
+    return response.data;
+  },
+
+  adicionarEndereco: async (clienteId, dto) => {
+    const response = await lojaApi.post(`/api/clientes/${clienteId}/enderecos`, dto);
+    return response;
+  },
+
+  removerEndereco: async (clienteId, enderecoId) => {
+    await lojaApi.delete(`/api/clientes/${clienteId}/enderecos/${enderecoId}`);
   },
 };
