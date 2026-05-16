@@ -155,7 +155,7 @@
   }
 }
 
-/* Overlay */
+/* ── Overlay ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -165,9 +165,10 @@
   justify-content: center;
   z-index: 1000;
   padding: 16px;
+  box-sizing: border-box;
 }
 
-/* Caixa do modal */
+/* ── Caixa do modal ── */
 .modal-box {
   background: white;
   border-radius: 10px;
@@ -178,15 +179,21 @@
   flex-direction: column;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* Header */
+.modal-box--large {
+  max-width: 520px;
+}
+
+/* ── Header ── */
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
   border-bottom: 1px solid #eee;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -199,6 +206,10 @@
   margin: 0;
 }
 
+.modal-header--danger h3 {
+  color: #c0392b;
+}
+
 .modal-close {
   background: none;
   border: none;
@@ -209,18 +220,22 @@
   padding: 4px;
   border-radius: 4px;
   transition: color 0.2s;
+  flex-shrink: 0;
 }
 
 .modal-close:hover {
   color: #333;
 }
 
-/* Body */
+/* ── Body ── */
 .modal-body {
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden; /* evita scroll horizontal */
   flex: 1;
   position: relative;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .modal-loading {
@@ -250,7 +265,7 @@
   margin-bottom: 14px;
 }
 
-/* Lista de endereços */
+/* ── Lista de endereços ── */
 .endereco-list {
   list-style: none;
   margin: 0;
@@ -258,24 +273,30 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
+/* ── Item de endereço: layout em coluna, botões na base ── */
 .endereco-item {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   padding: 14px;
   border: 1px solid #e8e8e8;
   border-radius: 8px;
   background: #fafafa;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
 }
 
 .endereco-info {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   font-size: 13px;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .endereco-tipo {
@@ -288,6 +309,7 @@
 
 .endereco-linha {
   color: #333;
+  line-height: 1.4;
 }
 
 .endereco-cep {
@@ -295,17 +317,44 @@
   font-size: 12px;
 }
 
+/* ── Botões de ação do endereço (editar / deletar) ── */
+.endereco-acoes {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.btn-icon-edit,
+.btn-icon-delete {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-icon-edit {
+  background: none;
+  border: 1px solid #3498db;
+  color: #3498db;
+}
+
+.btn-icon-edit:hover {
+  background: #3498db;
+  color: white;
+}
+
 .btn-icon-delete {
   background: none;
   border: 1px solid #ffcccc;
   color: #e74c3c;
-  border-radius: 6px;
-  padding: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  transition: all 0.2s;
 }
 
 .btn-icon-delete:hover {
@@ -314,16 +363,32 @@
   border-color: #ff5252;
 }
 
-/* Confirmação de delete */
+/* ── Item em modo de edição ── */
+.endereco-item--editing {
+  background: #f9fdf8;
+  border-color: #1a5c38;
+}
+
+.edicao-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+/* ── Confirmação de delete (overlay sobre o body do modal) ── */
 .confirm-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
   z-index: 10;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 .confirm-box {
@@ -331,8 +396,8 @@
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  padding: 28px 24px;
   text-align: center;
+  width: 100%;
   max-width: 300px;
 }
 
@@ -392,17 +457,20 @@
   cursor: not-allowed;
 }
 
-/* Footer */
+/* ── Footer ── */
 .modal-footer {
+  display: flex;
+  gap: 10px;
   padding: 14px 20px;
   border-top: 1px solid #eee;
+  flex-shrink: 0;
 }
 
 .modal-footer .btn-action {
   margin: 0;
 }
 
-/* Botão salvar */
+/* ── Botão salvar ── */
 .btn-salvar {
   display: flex;
   align-items: center;
@@ -417,6 +485,7 @@
   font-size: 14px;
   font-weight: 600;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 .btn-salvar:hover:not(:disabled) {
@@ -437,25 +506,20 @@
   font-size: 14px;
   color: #555;
   transition: background 0.2s;
+  white-space: nowrap;
 }
 
 .btn-cancel-modal:hover:not(:disabled) {
   background: #f5f5f5;
 }
 
-.modal-footer {
-  display: flex;
-  gap: 10px;
-  padding: 14px 20px;
-  border-top: 1px solid #eee;
-}
-
-/* Formulário */
+/* ── Formulário ── */
 .form-row {
   display: flex;
   flex-direction: column;
   gap: 5px;
   margin-bottom: 14px;
+  min-width: 0;
 }
 
 .form-row label {
@@ -477,6 +541,7 @@
   outline: none;
   width: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 .form-row input:focus,
@@ -488,12 +553,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 0;
 }
 
 .input-cep-wrap {
   position: relative;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .input-cep-wrap input {
@@ -506,7 +573,73 @@
   color: #1a5c38;
 }
 
-/* Spinner */
+/* ── Modal Danger (deletar conta) ── */
+.modal-box--danger {
+  border-top: 3px solid #e74c3c;
+}
+
+.modal-header--danger {
+  background: #fdf0f0;
+}
+
+.danger-warning {
+  text-align: center;
+  padding: 12px 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.danger-title {
+  font-weight: 700;
+  color: #e74c3c;
+  font-size: 15px;
+  margin: 0;
+}
+
+.danger-desc {
+  color: #666;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 340px;
+}
+
+.confirm-text-row {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.confirm-text-row label {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.confirm-text-row label strong {
+  color: #e74c3c;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.input-valid {
+  border-color: #27ae60 !important;
+  background: #f9fff9 !important;
+}
+
+.btn-confirm-delete--full {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* ── Spinner ── */
 .spin {
   animation: spin 0.8s linear infinite;
 }
@@ -516,8 +649,17 @@
   to { transform: rotate(360deg); }
 }
 
+/* ── Responsivo ── */
 @media (max-width: 480px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .modal-box {
+    max-height: 95vh;
+  }
+
+  .endereco-acoes {
+    flex-direction: row;
   }
 }
