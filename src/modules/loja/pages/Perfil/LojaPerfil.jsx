@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import { useModuleAuth } from "../../../../auth/hooks/useModuleAuth";
 import { AuthContext } from "../../../../auth/context/AuthContext";
 import { lojaAPI } from "../../services/lojaAPI";
 import { getAddressByCep } from "../../services/viaCepAPI";
+import { onlyNumbers } from "../../../../utils/formatters";
 
 import {
   MapPinHouse,
@@ -37,10 +39,6 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
   const [salvandoEdicao, setSalvandoEdicao] = useState(false);
   const [erroEdicao, setErroEdicao] = useState("");
 
-  useEffect(() => {
-    carregarEnderecos();
-  }, []);
-
   const carregarEnderecos = async () => {
     try {
       setLoading(true);
@@ -52,6 +50,10 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    carregarEnderecos();
+  }, [clienteId]);
 
   const handleDeletar = async () => {
     try {
@@ -86,7 +88,7 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
 
   const handleCepBlurEdicao = async () => {
     const cep = formEdicao.cep?.replace(/\D/g, "");
-    if (!cep || cep.length !== 8) return;
+    if (cep?.length !== 8) return;
     try {
       setBuscandoCep(true);
       const data = await getAddressByCep(cep);
@@ -115,6 +117,7 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
     }
     try {
       setSalvandoEdicao(true);
+      formEdicao.cep = onlyNumbers(formEdicao.cep);
       const atualizado = await lojaAPI.atualizarEndereco(clienteId, editandoId, formEdicao);
       setEnderecos((prev) =>
         prev.map((e) => (e.id === editandoId ? { ...e, ...atualizado } : e))
@@ -130,8 +133,19 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box modal-box--large" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      role="presentation"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+    >
+      <div
+        className="modal-box modal-box--large"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+      >
         <div className="modal-header">
           <h3>
             <MapPin size={18} /> Meus Endereços
@@ -142,15 +156,20 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
         </div>
 
         <div className="modal-body">
-          {loading ? (
-            <div className="modal-loading">
-              <Loader2 size={24} className="spin" />
-              <span>Carregando endereços...</span>
-            </div>
-          ) : enderecos.length === 0 ? (
-            <p className="modal-empty">Nenhum endereço cadastrado.</p>
-          ) : (
-            <ul className="endereco-list">
+          {(() => {
+            if (loading) {
+              return (
+                <div className="modal-loading">
+                  <Loader2 size={24} className="spin" />
+                  <span>Carregando endereços...</span>
+                </div>
+              );
+            }
+            if (enderecos.length === 0) {
+              return <p className="modal-empty">Nenhum endereço cadastrado.</p>;
+            }
+            return (
+              <ul className="endereco-list">
               {enderecos.map((end) =>
                 editandoId === end.id ? (
                   /* ── Formulário de Edição inline ── */
@@ -158,9 +177,10 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                     {erroEdicao && <p className="modal-erro">{erroEdicao}</p>}
 
                     <div className="form-row">
-                      <label>CEP *</label>
+                      <label htmlFor="cep-edit">CEP *</label>
                       <div className="input-cep-wrap">
                         <input
+                          id="cep-edit"
                           name="cep"
                           value={formEdicao.cep || ""}
                           onChange={handleChangeEdicao}
@@ -173,8 +193,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                     </div>
 
                     <div className="form-row">
-                      <label>Logradouro *</label>
+                      <label htmlFor="logradouro-edit">Logradouro *</label>
                       <input
+                        id="logradouro-edit"
                         name="logradouro"
                         value={formEdicao.logradouro || ""}
                         onChange={handleChangeEdicao}
@@ -184,8 +205,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
 
                     <div className="form-grid">
                       <div className="form-row">
-                        <label>Número *</label>
+                        <label htmlFor="numero-edit">Número *</label>
                         <input
+                          id="numero-edit"
                           name="numero"
                           value={formEdicao.numero || ""}
                           onChange={handleChangeEdicao}
@@ -193,8 +215,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                         />
                       </div>
                       <div className="form-row">
-                        <label>Complemento</label>
+                        <label htmlFor="complemento-edit">Complemento</label>
                         <input
+                          id="complemento-edit"
                           name="complemento"
                           value={formEdicao.complemento || ""}
                           onChange={handleChangeEdicao}
@@ -204,8 +227,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                     </div>
 
                     <div className="form-row">
-                      <label>Bairro *</label>
+                      <label htmlFor="bairro-edit">Bairro *</label>
                       <input
+                        id="bairro-edit"
                         name="bairro"
                         value={formEdicao.bairro || ""}
                         onChange={handleChangeEdicao}
@@ -215,8 +239,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
 
                     <div className="form-grid">
                       <div className="form-row">
-                        <label>Cidade *</label>
+                        <label htmlFor="cidade-edit">Cidade *</label>
                         <input
+                          id="cidade-edit"
                           name="cidade"
                           value={formEdicao.cidade || ""}
                           onChange={handleChangeEdicao}
@@ -224,8 +249,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                         />
                       </div>
                       <div className="form-row">
-                        <label>UF *</label>
+                        <label htmlFor="uf-edit">UF *</label>
                         <input
+                          id="uf-edit"
                           name="uf"
                           value={formEdicao.uf || ""}
                           onChange={handleChangeEdicao}
@@ -236,8 +262,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                     </div>
 
                     <div className="form-row">
-                      <label>Tipo de Endereço</label>
+                      <label htmlFor="tipoEndereco-edit">Tipo de Endereço</label>
                       <select
+                        id="tipoEndereco-edit"
                         name="tipoEndereco"
                         value={formEdicao.tipoEndereco || "RESIDENCIAL"}
                         onChange={handleChangeEdicao}
@@ -303,8 +330,9 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
                   </li>
                 )
               )}
-            </ul>
-          )}
+              </ul>
+            );
+          })()}
 
           {/* Confirmação de delete */}
           {confirmDelete && (
@@ -347,6 +375,12 @@ function ModalListarEnderecos({ clienteId, onClose, onAdicionar }) {
     </div>
   );
 }
+
+ModalListarEnderecos.propTypes = {
+  clienteId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onAdicionar: PropTypes.func.isRequired,
+};
 
 // ── Modal de Adicionar Endereço ────────────────────────────────────────────
 function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
@@ -399,6 +433,7 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
     }
     try {
       setSalvando(true);
+      form.cep = onlyNumbers(form.cep);
       await lojaAPI.adicionarEndereco(clienteId, form);
       onSucesso();
     } catch (err) {
@@ -410,8 +445,19 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      role="presentation"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+    >
+      <div
+        className="modal-box"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+      >
         <div className="modal-header">
           <h3>
             <Plus size={18} /> Novo Endereço
@@ -425,9 +471,10 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
           {erro && <p className="modal-erro">{erro}</p>}
 
           <div className="form-row">
-            <label>CEP *</label>
+            <label htmlFor="cep-add">CEP *</label>
             <div className="input-cep-wrap">
               <input
+                id="cep-add"
                 name="cep"
                 value={form.cep}
                 onChange={handleChange}
@@ -440,8 +487,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
           </div>
 
           <div className="form-row">
-            <label>Logradouro *</label>
+            <label htmlFor="logradouro-add">Logradouro *</label>
             <input
+              id="logradouro-add"
               name="logradouro"
               value={form.logradouro}
               onChange={handleChange}
@@ -451,8 +499,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
 
           <div className="form-grid">
             <div className="form-row">
-              <label>Número *</label>
+              <label htmlFor="numero-add">Número *</label>
               <input
+                id="numero-add"
                 name="numero"
                 value={form.numero}
                 onChange={handleChange}
@@ -460,8 +509,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
               />
             </div>
             <div className="form-row">
-              <label>Complemento</label>
+              <label htmlFor="complemento-add">Complemento</label>
               <input
+                id="complemento-add"
                 name="complemento"
                 value={form.complemento}
                 onChange={handleChange}
@@ -471,8 +521,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
           </div>
 
           <div className="form-row">
-            <label>Bairro *</label>
+            <label htmlFor="bairro-add">Bairro *</label>
             <input
+              id="bairro-add"
               name="bairro"
               value={form.bairro}
               onChange={handleChange}
@@ -482,8 +533,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
 
           <div className="form-grid">
             <div className="form-row">
-              <label>Cidade *</label>
+              <label htmlFor="cidade-add">Cidade *</label>
               <input
+                id="cidade-add"
                 name="cidade"
                 value={form.cidade}
                 onChange={handleChange}
@@ -491,8 +543,9 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
               />
             </div>
             <div className="form-row">
-              <label>UF *</label>
+              <label htmlFor="uf-add">UF *</label>
               <input
+                id="uf-add"
                 name="uf"
                 value={form.uf}
                 onChange={handleChange}
@@ -503,8 +556,8 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
           </div>
 
           <div className="form-row">
-            <label>Tipo de Endereço</label>
-            <select name="tipoEndereco" value={form.tipoEndereco} onChange={handleChange}>
+            <label htmlFor="tipoEndereco-add">Tipo de Endereço</label>
+            <select id="tipoEndereco-add" name="tipoEndereco" value={form.tipoEndereco} onChange={handleChange}>
               <option value="RESIDENCIAL">Residencial</option>
               <option value="COMERCIAL">Comercial</option>
               <option value="OUTRO">Outro</option>
@@ -526,6 +579,12 @@ function ModalAdicionarEndereco({ clienteId, onClose, onSucesso }) {
   );
 }
 
+ModalAdicionarEndereco.propTypes = {
+  clienteId: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSucesso: PropTypes.func.isRequired,
+};
+
 // ── Modal de Confirmação de Deletar Conta ─────────────────────────────────
 function ModalDeletarConta({ onClose, onConfirmar, deletando }) {
   const [confirmText, setConfirmText] = useState("");
@@ -533,8 +592,19 @@ function ModalDeletarConta({ onClose, onConfirmar, deletando }) {
   const confirmacaoValida = confirmText === textoEsperado;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box modal-box--danger" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      role="presentation"
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+    >
+      <div
+        className="modal-box modal-box--danger"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+      >
         <div className="modal-header modal-header--danger">
           <h3>
             <AlertTriangle size={18} /> Deletar Conta
@@ -592,6 +662,12 @@ function ModalDeletarConta({ onClose, onConfirmar, deletando }) {
     </div>
   );
 }
+
+ModalDeletarConta.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onConfirmar: PropTypes.func.isRequired,
+  deletando: PropTypes.bool.isRequired,
+};
 
 // ── Componente Principal ───────────────────────────────────────────────────
 export default function LojaPerfil() {
